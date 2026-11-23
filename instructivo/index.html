@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Armado del cohete EC-COH-100F</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* Hoja de taller: papel gris frío, tinta azul marino, naranja internacional para pegamento y alertas.
+   Diseño: barra de pasos a la izquierda, tarjetas de paso con dibujo técnico a la derecha. */
+:root{
+  --paper:#eceff3; --panel:#ffffff; --ink:#15202c; --muted:#5a6676; --line:#c8d0da;
+  --accent:#e35205; --accent-soft:#fde3d3; --ok:#23744a; --ok-soft:#d9efe2; --warn:#a86a06; --warn-soft:#fbefd2;
+  --bad:#b8322a; --bad-soft:#f8dcd9; --part:#dfe6ee; --part2:#c9d4e0; --hatch:#8796a8;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0f141a; --panel:#17202a; --ink:#e4e9ef; --muted:#93a0af; --line:#2c3846;
+    --accent:#ff7a2f; --accent-soft:#3a2416; --ok:#5cc28a; --ok-soft:#173326; --warn:#e2ab45; --warn-soft:#352a12;
+    --bad:#ff7b70; --bad-soft:#3a1a18; --part:#243140; --part2:#2f3f51; --hatch:#7d8da0; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0f141a; --panel:#17202a; --ink:#e4e9ef; --muted:#93a0af; --line:#2c3846;
+  --accent:#ff7a2f; --accent-soft:#3a2416; --ok:#5cc28a; --ok-soft:#173326; --warn:#e2ab45; --warn-soft:#352a12;
+  --bad:#ff7b70; --bad-soft:#3a1a18; --part:#243140; --part2:#2f3f51; --hatch:#7d8da0; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:15px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+.num,.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1160px;margin:0 auto;padding:20px 18px 64px}
+
+/* Encabezado */
+header.top{display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:end;padding-bottom:16px;border-bottom:2px solid var(--ink)}
+.docno{font:600 12px/1 var(--mono);letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+header.top h1{font-size:clamp(26px,4vw,38px);font-weight:700;margin-top:6px}
+header.top p{margin:6px 0 0;color:var(--muted);max-width:62ch}
+.rocketpick{display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.rocketpick .lbl{font-size:12px;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel)}
+.seg button{border:0;background:none;padding:7px 12px;font-size:13px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+
+/* Vista del cohete */
+.hero{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px 10px}
+.hero-head{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:space-between}
+.hero-head h2{font-size:18px}
+.hero-head .hint{font-size:13px;color:var(--muted)}
+.diagram{overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:640px;height:auto}
+.part{cursor:pointer;transition:transform .55s cubic-bezier(.2,.7,.2,1)}
+.part .body{fill:var(--part);stroke:var(--ink);stroke-width:.7}
+.part:hover .body,.part.sel .body{fill:var(--accent-soft);stroke:var(--accent)}
+.part .hid{fill:none;stroke:var(--ink);stroke-width:.5;stroke-dasharray:2 1.4;opacity:.75}
+.joint{cursor:pointer}
+.joint circle{fill:var(--panel);stroke:var(--accent);stroke-width:.7}
+.joint text{font:600 4.6px var(--mono);fill:var(--accent);text-anchor:middle;dominant-baseline:central}
+.joint:hover circle{fill:var(--accent)} .joint:hover text{fill:var(--panel)}
+.axis{stroke:var(--muted);stroke-width:.35;stroke-dasharray:6 2 1 2}
+.dimtxt{font:4.4px var(--mono);fill:var(--muted)}
+.exploded .joint{opacity:0;pointer-events:none}
+.joint{transition:opacity .3s}
+@media (prefers-reduced-motion:reduce){.part,.joint{transition:none}}
+.partinfo{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px 18px;margin-top:6px;padding-top:10px;border-top:1px dashed var(--line);font-size:13.5px}
+.partinfo b{display:block;font:600 11px var(--mono);text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:7px 12px;font-size:13.5px}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.btn.primary:hover{filter:brightness(.95)}
+
+/* Navegación por fases */
+.layout{display:grid;grid-template-columns:230px 1fr;gap:22px;margin-top:22px;align-items:start}
+nav.phases{position:sticky;top:12px;display:flex;flex-direction:column;gap:4px}
+nav.phases a{display:grid;grid-template-columns:22px 1fr auto;gap:8px;align-items:center;text-decoration:none;color:var(--ink);padding:8px 10px;border-radius:8px;border:1px solid transparent}
+nav.phases a:hover{background:var(--panel);border-color:var(--line)}
+nav.phases a[aria-current="page"]{background:var(--ink);color:var(--paper)}
+nav.phases .ix{font:600 12px var(--mono);opacity:.7}
+nav.phases .cnt{font:12px var(--mono);opacity:.75}
+nav.phases .bar{grid-column:2/4;height:3px;background:var(--line);border-radius:2px;overflow:hidden}
+nav.phases .bar i{display:block;height:100%;background:var(--ok);width:0}
+nav.phases a[aria-current="page"] .bar{background:rgba(255,255,255,.25)}
+.overall{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:13px}
+.overall .big{font:600 22px var(--mono)}
+
+/* Contenido */
+main section{display:none}
+main section.on{display:block}
+.sechead{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:baseline;justify-content:space-between;margin-bottom:12px}
+.sechead h2{font-size:26px}
+.sechead p{margin:4px 0 0;color:var(--muted);max-width:68ch}
+.step{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,390px);gap:16px 22px;background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:12px}
+.step.done{border-left-color:var(--ok)}
+.step .k{display:flex;gap:12px;align-items:flex-start}
+.check{flex:none;width:30px;height:30px;border-radius:7px;border:2px solid var(--ink);background:var(--panel);display:grid;place-items:center;margin-top:1px}
+.check svg{width:18px;height:18px;opacity:0}
+.step.done .check{background:var(--ok);border-color:var(--ok)}
+.step.done .check svg{opacity:1}
+.step h3{font-size:19px;font-weight:600}
+.step .tag{display:inline-block;font:600 11px var(--mono);padding:2px 6px;border-radius:4px;background:var(--accent-soft);color:var(--accent);margin-left:6px;vertical-align:2px}
+.step .txt{margin-top:6px}
+.step .txt p{margin:6px 0}
+.step .txt ol,.step .txt ul{margin:6px 0;padding-left:20px}
+.step .txt li{margin:3px 0}
+.fig{background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:6px;align-self:start}
+.fig svg{display:block;width:100%;height:auto}
+.fig figcaption{font-size:12px;color:var(--muted);padding:4px 4px 2px}
+.note{margin-top:10px;padding:8px 10px;border-radius:6px;font-size:13.5px;background:var(--warn-soft);border-left:3px solid var(--warn)}
+.note.bad{background:var(--bad-soft);border-left-color:var(--bad)}
+.note.ok{background:var(--ok-soft);border-left-color:var(--ok)}
+.timer{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:10px;padding:8px 10px;border:1px dashed var(--line);border-radius:8px}
+.timer .t{font:600 20px var(--mono);min-width:76px}
+.timer.ring{border-color:var(--ok);background:var(--ok-soft)}
+.timer .lab{font-size:13px;color:var(--muted)}
+.cure{margin-top:10px;padding:10px 12px;border-radius:8px;border:1px solid var(--line);display:grid;gap:6px}
+.cure .t{font:600 22px var(--mono)}
+.cure .meter{height:8px;background:var(--line);border-radius:4px;overflow:hidden}
+.cure .meter i{display:block;height:100%;background:var(--accent);width:0}
+.cure.ready .meter i{background:var(--ok)}
+
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 11.5px var(--mono);text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--paper)}
+td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.tablebox{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow-x:auto;margin-bottom:14px}
+.tablebox h3{font-size:16px;padding:12px 12px 4px}
+tr.chk td:first-child{width:36px}
+.mini{width:20px;height:20px;accent-color:var(--ok)}
+.pill{display:inline-block;font:600 12px var(--mono);padding:3px 8px;border-radius:99px}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--bad-soft);color:var(--bad)}
+
+/* Calculadora */
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.calc label{display:block;font-size:13px;color:var(--muted);margin-top:10px}
+.calc input{width:100%;margin-top:4px;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--paper);color:var(--ink);font:600 18px var(--mono)}
+.verdict{display:grid;gap:8px}
+.vrow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;background:var(--paper)}
+.vbig{font:700 20px var(--display);padding:10px 12px;border-radius:8px}
+.vbig.ok{background:var(--ok-soft);color:var(--ok)} .vbig.warn{background:var(--warn-soft);color:var(--warn)} .vbig.bad{background:var(--bad-soft);color:var(--bad)}
+
+footer{margin-top:30px;font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+
+/* SVG de figuras */
+.f-ink{stroke:var(--ink);fill:none;stroke-width:1.2}
+.f-part{fill:var(--part);stroke:var(--ink);stroke-width:1.1}
+.f-part2{fill:var(--part2);stroke:var(--ink);stroke-width:1.1}
+.f-epoxy{fill:var(--accent);opacity:.9}
+.f-acc{stroke:var(--accent);fill:none;stroke-width:1.6}
+.f-ok{stroke:var(--ok);fill:none;stroke-width:1.4}
+.f-txt{font:11px var(--body);fill:var(--ink)}
+.f-sm{font:10px var(--mono);fill:var(--muted)}
+.f-acct{font:600 10.5px var(--body);fill:var(--accent)}
+.f-dash{stroke:var(--muted);stroke-dasharray:4 3;fill:none;stroke-width:1}
+.f-hatch{fill:url(#hatch)}
+
+@media (max-width:860px){
+  .layout{grid-template-columns:1fr}
+  nav.phases{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:4px}
+  nav.phases a{grid-template-columns:auto auto;white-space:nowrap}
+  nav.phases .bar,.overall{display:none}
+  .step{grid-template-columns:1fr}
+  .calc{grid-template-columns:1fr}
+  header.top{grid-template-columns:1fr}
+  .rocketpick{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <pattern id="hatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="5" height="5" fill="var(--accent-soft)"></rect>
+      <line x1="0" y1="0" x2="0" y2="5" stroke="var(--accent)" stroke-width="1.2"></line>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--ink)"></path></marker>
+    <marker id="arra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--accent)"></path></marker>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="docno">EC-COH-100 · rev. G · armado con Kola Loka · Equipo 2 Fuselaje · Eclipso Cruceros</div>
+      <h1>Armado del cohete EC-COH-100F</h1>
+      <p>Instructivo paso a paso para imprimir, pegar y revisar los cohetes de aire comprimido. Marca cada paso al terminarlo: el avance se guarda por cohete en este navegador.</p>
+    </div>
+    <div class="rocketpick">
+      <span class="lbl" id="rk-lbl">Estás armando</span>
+      <div class="seg" role="group" aria-labelledby="rk-lbl" id="rocketSeg"></div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-head">
+      <h2>Las piezas y sus uniones</h2>
+      <span class="hint">Toca una pieza para ver sus datos, o un círculo U1–U6 para ir al paso donde se pega.</span>
+      <button class="btn" id="explodeBtn" aria-pressed="false">Separar piezas</button>
+    </div>
+    <div class="diagram" id="diagram"></div>
+    <div class="partinfo" id="partinfo"></div>
+  </div>
+
+  <div class="layout">
+    <nav class="phases" id="phases" aria-label="Fases del armado"></nav>
+    <main id="main"></main>
+  </div>
+
+  <footer>
+    Basado en el juego de planos EC-COH-100G (rev. G), los STL de la misma revisión y el instructivo de armado. Medidas en mm. Las masas y el punto de equilibrio son valores de diseño: usa siempre lo que midas en cada cohete.
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- almacenamiento seguro ---------- */
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},
+             set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ROCKETS=[{id:"c1",name:"Cohete 1"},{id:"c2",name:"Cohete 2"},{id:"c3",name:"Cohete 3"},{id:"pe",name:"Prueba estática"}];
+let rocket=store.get("ecoh:rocket","c1");
+let state=loadState();
+function loadState(){return store.get("ecoh:"+rocket,{done:{},cure:null,mass:"",xcm:""})}
+function save(){store.set("ecoh:"+rocket,state)}
+let lot=store.get("ecoh:lot",{done:{}});
+function saveLot(){store.set("ecoh:lot",lot)}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ---------- geometría del cohete (mm desde la punta; r = radio) ---------- */
+const NOSE=[[0,0],[10,4.14],[20,7.78],[30,10.94],[40,13.65],[50,15.92],[60,17.76],[70,19.18],[80,20.19],[90,20.8],[100,21]];
+function rev(pts){ // perfil de revolución: arriba (y=-r) y regreso por abajo
+  const top=pts.map(p=>p[0].toFixed(2)+" "+(-p[1]).toFixed(2));
+  const bot=pts.slice().reverse().map(p=>p[0].toFixed(2)+" "+(p[1]).toFixed(2));
+  return "M"+top.join(" L")+" L"+bot.join(" L")+"Z";
+}
+const P={
+  nose:{name:"Nariz",pos:"1",dwg:"EC-COH-101",mass:"11.6 g",join:"U1 · hombro deslizante + 2 tiras de cinta",fn:"Ojiva tangente de 100 mm con anillo sólido de unión al hombro (rev. G). Es la tapa removible de la bahía del sensor.",
+        d:rev(NOSE.concat([[100,19.8],[115,19.8]])),dx:-70,dy:0},
+  seg:{name:"Segmento superior",pos:"3",dwg:"EC-COH-103",mass:"34.5 g",join:"U3 · casquillo de 20 mm + Kola Loka, sellado con cinta",fn:"Bahía Ø42, transición, mampara cónica (la que aguanta la presión) y tubo Ø25.4.",
+        d:rev([[100,21],[159.2,21],[207.2,12.7],[310,12.7]]),dx:0,dy:0},
+  tube:{name:"Tubo de presión",pos:"4",dwg:"EC-COH-104",mass:"15.0 g",join:"U3 arriba · U5 abajo",fn:"Cámara de presión. Casquillo Ø28.2 que recibe al segmento superior.",
+        d:rev([[290,13.5],[292,14.1],[310,14.1],[313,12.7],[419.2,12.7]]),dx:40,dy:0},
+  tail:{name:"Cola",pos:"5",dwg:"EC-COH-105",mass:"13.1 g",join:"U5 · casquillo de 25 mm + Kola Loka, sellado con cinta",fn:"Guía Ø22.2 que sella sobre el tubo lanzador y 3 canaletas para los alerones, con rieles de 1.6 mm y pie de refuerzo (rev. G).",
+        d:rev([[394.2,12.7],[396,14.1],[421.5,14.1],[422.7,12.6],[474.2,12.6]]),dx:80,dy:0},
+  finT:{name:"Alerones (×3)",pos:"6",dwg:"EC-COH-106",mass:"2.7 g c/u",join:"U6 · raíz en la canaleta + Kola Loka",fn:"Trapezoidales, 1.2 mm de espesor, impresos planos.",
+        d:"M396.2 -14.1 L444.2 -46 L474.2 -46 L474.2 -12.6 L422.6 -12.6 L421.2 -14.1Z",dx:80,dy:-14,key:"fin"},
+  finB:{key:"fin",d:"M396.2 7.05 L444.2 23 L474.2 23 L474.2 6.3 L422.6 6.3 L421.2 7.05Z",dx:80,dy:14},
+  tapa:{name:"Tapa retenedora",pos:"2",dwg:"EC-COH-102",mass:"1.7 g con foami",join:"U2 · labio a presión en la nariz + gota de cianoacrilato",fn:"Sujeta el sensor desde arriba. Sale junto con la nariz.",
+        d:"M114 -19.7 L117 -19.7 L117 19.7 L114 19.7Z",dx:-36,dy:-46,hidden:true},
+  sensor:{name:"Sensor",pos:"S",dwg:"—",mass:"20 g",join:"U4 · foami abajo, tapa arriba (sin pegamento)",fn:"38 × 27 × 26 mm. Va de pie, con el lado de 38 mm a lo largo del cohete.",
+        d:"M117 -13.5 L155 -13.5 L155 13.5 L117 13.5Z",dx:0,dy:-46,hidden:true}
+};
+P.finB.name=P.finT.name;
+const ORDER=["nose","seg","tube","tail","finT","finB","tapa","sensor"];
+const JOINTS=[{u:"U1",x:100,go:"d2-cierra"},{u:"U2",x:115.5,go:"d2-tapa"},{u:"U4",x:136,go:"d2-sensor"},{u:"U3",x:300,go:"d1-u3"},{u:"U5",x:407,go:"d1-u5"},{u:"U6",x:452,go:"d1-u6"}];
+
+function drawDiagram(){
+  let s='<svg viewBox="-88 -84 664 140" role="img" aria-label="Cohete EC-COH-100F con sus piezas y uniones">';
+  s+='<line class="axis" x1="-80" y1="0" x2="568" y2="0"></line>';
+  ORDER.forEach(k=>{const p=P[k];const key=p.key||k;
+    s+=`<g class="part" data-k="${key}" data-dx="${p.dx}" data-dy="${p.dy}" tabindex="0" role="button" aria-label="${esc(p.name)}"><path class="body${p.hidden?' hiddenpart':''}" d="${p.d}"></path></g>`;});
+  JOINTS.forEach(j=>{s+=`<g class="joint" data-go="${j.go}" tabindex="0" role="button" aria-label="Unión ${j.u}"><line x1="${j.x}" y1="${j.x>380?28:23}" x2="${j.x}" y2="35" stroke="var(--accent)" stroke-width=".5"></line><circle cx="${j.x}" cy="40" r="5"></circle><text x="${j.x}" y="40">${j.u}</text></g>`;});
+  s+='<text class="dimtxt" x="0" y="54">0</text><text class="dimtxt" x="455" y="54">474.2 mm</text>';
+  s+='</svg>';
+  const el=document.getElementById("diagram");el.innerHTML=s;
+  el.querySelectorAll(".hiddenpart").forEach(h=>h.classList.add("hidcls"));
+  applyExplode();
+  el.querySelectorAll(".part").forEach(g=>{
+    const f=()=>selectPart(g.dataset.k);
+    g.addEventListener("click",f);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}});
+  });
+  el.querySelectorAll(".joint").forEach(g=>{
+    const f=()=>goStep(g.dataset.go);
+    g.addEventListener("click",f);g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();f()}});
+  });
+}
+let exploded=false;
+function applyExplode(){
+  const svg=document.querySelector("#diagram svg");svg.classList.toggle("exploded",exploded);
+  svg.querySelectorAll(".part").forEach(g=>{
+    const dx=exploded?+g.dataset.dx:0,dy=exploded?+g.dataset.dy:0;
+    g.style.transform=`translate(${dx}px,${dy}px)`;
+    const b=g.querySelector(".hidcls");
+    if(b){b.setAttribute("class",exploded?"body hidcls":"hid hidcls")}
+  });
+  const b=document.getElementById("explodeBtn");b.textContent=exploded?"Juntar piezas":"Separar piezas";b.setAttribute("aria-pressed",exploded);
+}
+document.getElementById("explodeBtn").addEventListener("click",()=>{exploded=!exploded;applyExplode()});
+function selectPart(k){
+  document.querySelectorAll("#diagram .part").forEach(g=>g.classList.toggle("sel",g.dataset.k===k));
+  const p=k==="fin"?P.finT:P[k];
+  document.getElementById("partinfo").innerHTML=
+   `<div><b>Pieza</b>${esc(p.pos)} · ${esc(p.name)}</div><div><b>Plano</b><span class="mono">${esc(p.dwg)}</span></div><div><b>Masa</b><span class="mono">${esc(p.mass)}</span></div><div><b>Unión</b>${esc(p.join)}</div><div style="grid-column:1/-1"><b>Qué hace</b>${esc(p.fn)}</div>`;
+}
+
+/* ---------- figuras ---------- */
+const F={};
+const T=(x,y,t,c="f-txt",a="start")=>`<text class="${c}" x="${x}" y="${y}" text-anchor="${a}">${t}</text>`;
+const svgw=(h,body,label)=>`<svg viewBox="0 0 320 ${h}" style="overflow:hidden" role="img" aria-label="${esc(label)}">${body}</svg>`;
+F.inspect=()=>svgw(150,`
+  <circle cx="60" cy="58" r="26" fill="var(--warn-soft)" stroke="var(--warn)"></circle>
+  ${[0,45,90,135,180,225,270,315].map(a=>{const r=Math.PI*a/180;return `<line x1="${60+31*Math.cos(r)}" y1="${58+31*Math.sin(r)}" x2="${60+39*Math.cos(r)}" y2="${58+39*Math.sin(r)}" stroke="var(--warn)" stroke-width="2"></line>`}).join("")}
+  <rect x="130" y="30" width="34" height="95" class="f-part"></rect>
+  ${[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(i=>`<line x1="130" y1="${34+i*5}" x2="164" y2="${34+i*5}" stroke="var(--hatch)" stroke-width=".5"></line>`).join("")}
+  <path d="M164 72 L176 70" class="f-acc"></path><rect x="128" y="68" width="38" height="5" fill="var(--panel)" stroke="var(--bad)" stroke-width="1.2"></rect>
+  ${T(180,66,"capas separadas","f-acct")}${T(180,80,"= descartar","f-sm")}
+  <rect x="230" y="30" width="34" height="95" class="f-part"></rect>
+  ${[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(i=>`<line x1="230" y1="${34+i*5}" x2="264" y2="${34+i*5}" stroke="var(--hatch)" stroke-width=".5"></line>`).join("")}
+  ${T(247,142,"pared pareja = OK","f-sm","middle")}${T(60,110,"contraluz","f-sm","middle")}`,"Revisar piezas a contraluz");
+F.ream=()=>svgw(170,`
+  <rect x="40" y="40" width="200" height="14" class="f-part"></rect><rect x="40" y="104" width="200" height="14" class="f-part"></rect>
+  ${T(140,34,"pared de la guía (corte)","f-sm","middle")}
+  <rect x="20" y="58" width="260" height="42" class="f-part2"></rect>
+  <rect x="60" y="54" width="140" height="4" fill="var(--accent)"></rect><rect x="60" y="100" width="140" height="4" fill="var(--accent)"></rect>
+  ${T(150,82,"tubo PVC 1/2&#34; (Ø21.3)","f-txt","middle")}
+  ${T(210,140,"lija 220 enrollada","f-acct")}<path d="M206 136 L190 104" class="f-acc" marker-end="url(#arra)"></path>
+  <path d="M290 60 A 18 22 0 1 1 290 98" class="f-ink" marker-end="url(#arr)"></path>${T(296,48,"gira","f-sm")}
+  ${T(20,160,"Ø22.4 impreso → lijar a Ø22.2","f-sm")}`,"Lijar la guía con el mandril");
+F.sockets=()=>svgw(170,`
+  <rect x="30" y="38" width="120" height="12" class="f-part2"></rect><rect x="30" y="112" width="120" height="12" class="f-part2"></rect>
+  <rect x="150" y="44" width="140" height="10" class="f-part"></rect><rect x="150" y="108" width="140" height="10" class="f-part"></rect>
+  <rect x="30" y="50" width="120" height="2.5" fill="var(--accent)"></rect><rect x="30" y="109.5" width="120" height="2.5" fill="var(--accent)"></rect>
+  <rect x="34" y="52.5" width="160" height="9" class="f-part"></rect><rect x="34" y="100.5" width="160" height="9" class="f-part"></rect>
+  <path d="M150 50 L150 64" class="f-ink"></path>
+  ${T(90,30,"casquillo (pieza que recibe)","f-sm","middle")}${T(170,146,"tubo que entra","f-sm")}
+  ${T(40,80,"junta apretada, sin juego","f-acct")}${T(40,93,"el pegamento entra solo","f-sm")}
+  <path d="M10 81 L28 81" class="f-ink" marker-end="url(#arr)"></path>${T(4,74,"entra","f-sm")}`,"Prueba en seco de un casquillo");
+F.zones=()=>svgw(190,`
+  ${T(10,18,"Lija 120 solo donde va pegamento:","f-sm")}
+  <path d="M20 30 L120 30 L150 42 L300 42 L300 56 L150 56 L120 68 L20 68Z" class="f-part"></path>
+  <rect x="262" y="42" width="38" height="14" class="f-hatch" stroke="var(--accent)"></rect>${T(281,80,"20 mm","f-acct","middle")}
+  ${T(20,84,"Segmento superior (extremo)","f-sm")}
+  <path d="M20 102 L60 102 L66 106 L300 106 L300 120 L66 120 L60 124 L20 124Z" class="f-part"></path>
+  <rect x="252" y="106" width="48" height="14" class="f-hatch" stroke="var(--accent)"></rect>${T(276,138,"25 mm","f-acct","middle")}
+  ${T(20,140,"Tubo de presión (extremo delgado)","f-sm")}
+  <path d="M30 182 L80 152 L120 152 L120 182Z" class="f-part"></path><rect x="30" y="178" width="90" height="4" class="f-hatch" stroke="var(--accent)"></rect>
+  ${T(130,176,"raíz de cada alerón","f-acct")}`,"Zonas a lijar");
+F.fin=()=>svgw(160,`
+  <path d="M30 130 L190 130 L190 40 L120 40Z" class="f-part"></path>
+  <path d="M30 130 L120 40" stroke="var(--accent)" stroke-width="4" fill="none"></path>
+  ${T(30,30,"borde de ataque:","f-acct")}${T(30,44,"redondear con lija 220","f-sm")}
+  <path d="M196 85 L230 85" class="f-ink"></path>${T(234,82,"borde de salida:","f-txt")}${T(234,96,"se deja recto","f-sm")}
+  ${T(30,150,"raíz (va dentro de la canaleta)","f-sm")}<path d="M30 134 L190 134" class="f-dash"></path>
+  <g transform="translate(250,118)"><path d="M0 0 L40 0 L40 6 L0 6Z" class="f-part"></path><path d="M0 0 A3 3 0 0 0 0 6" stroke="var(--accent)" stroke-width="2" fill="var(--part)"></path>${T(20,22,"corte R0.6","f-sm","middle")}</g>`,"Preparar alerones");
+F.nose=()=>svgw(140,`
+  <path d="M20 70 Q 90 20 170 34 L230 34 L230 40 L262 40 L262 100 L230 100 L230 106 L170 106 Q 90 120 20 70Z" class="f-part"></path>
+  <rect x="230" y="40" width="32" height="60" class="f-hatch" stroke="var(--accent)"></rect>
+  ${T(246,124,"hombro: lija 220","f-acct","middle")}${T(120,20,"debe deslizar en la bahía sin juego","f-sm","middle")}`,"Ajustar el hombro de la nariz");
+F.ports=()=>svgw(140,`
+  <rect x="30" y="35" width="200" height="70" class="f-part"></rect>
+  ${[90,150].map(x=>`<circle cx="${x}" cy="70" r="4" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.5"></circle>`).join("")}
+  <path d="M120 70 L230 70" class="f-dash"></path>
+  <rect x="250" y="62" width="60" height="16" class="f-part2"></rect><path d="M250 70 L232 70" stroke="var(--ink)" stroke-width="2"></path>
+  ${T(30,124,"3 puertos Ø2 a 120° (x = 136 mm)","f-sm")}${T(30,137,"broca girada a mano","f-sm")}`,"Repasar puertos estáticos");
+F.ipa=()=>svgw(120,`
+  <rect x="40" y="20" width="44" height="80" rx="6" class="f-part2"></rect><rect x="52" y="8" width="20" height="14" class="f-part"></rect>
+  ${T(62,66,"IPA","f-txt","middle")}
+  <path d="M110 60 Q 150 40 190 60 T 270 60" class="f-acc"></path>${T(110,96,"limpia y deja evaporar 5 min;","f-sm")}${T(110,110,"luego ya no lo toques","f-sm")}`,"Desengrasar");
+F.mandrel=()=>svgw(210,`
+  <rect x="110" y="182" width="100" height="18" class="f-part2"></rect>${T(160,195,"tornillo / base","f-sm","middle")}
+  <rect x="150" y="20" width="20" height="162" class="f-part2"></rect>
+  <rect x="148" y="20" width="24" height="162" fill="none" stroke="var(--accent)" stroke-dasharray="3 2"></rect>
+  ${T(180,30,"PVC 1/2&#34; de 50 cm","f-txt")}${T(180,46,"forrado con bolsa","f-acct")}${T(180,59,"o cinta canela","f-acct")}
+  <path d="M138 70 L182 70 L182 182 L138 182Z" fill="var(--part)" stroke="var(--ink)" opacity=".85"></path>
+  ${T(130,110,"cuerpo","f-sm","end")}${T(130,122,"vertical","f-sm","end")}
+  <path d="M90 40 L90 66" class="f-ink" marker-end="url(#arr)"></path>${T(40,34,"se desliza","f-sm")}`,"Mandril vertical");
+F.ca=()=>svgw(140,`
+  <path d="M60 30 L84 30 L92 44 L92 120 L52 120 L52 44Z" class="f-part2"></path><path d="M66 12 L78 12 L84 30 L60 30Z" class="f-part"></path>
+  ${T(72,86,"Kola","f-txt","middle")}${T(72,100,"Loka","f-txt","middle")}
+  <path d="M150 40 C 150 54, 160 62, 150 70 C 140 62, 150 54, 150 40Z" fill="var(--accent)"></path>
+  <path d="M200 40 C 200 54, 210 62, 200 70 C 190 62, 200 54, 200 40Z" fill="var(--accent)" opacity=".6"></path>
+  ${T(140,96,"pocas gotas","f-acct")}${T(140,112,"guantes de nitrilo · ventila","f-sm")}${T(140,126,"nada de algodón","f-sm")}`,"Preparar el cianoacrilato");
+F.seal=()=>svgw(140,`
+  <rect x="20" y="52" width="140" height="36" class="f-part"></rect><rect x="150" y="46" width="150" height="48" class="f-part2"></rect>
+  <rect x="134" y="42" width="40" height="56" fill="var(--ink)" opacity=".82"></rect>
+  <path d="M174 42 L182 46 L182 98 L174 98Z" fill="var(--accent)"></path>
+  ${T(154,30,"1½ vueltas estiradas","f-acct","middle")}${T(20,120,"la junta queda cubierta; la punta","f-sm")}${T(20,133,"de la cinta mira hacia la cola","f-sm")}`,"Sellar con cinta aislante");
+F.u5=()=>svgw(170,`
+  <path d="M170 44 L300 44 L300 56 L170 56Z" class="f-part2"></path><path d="M170 108 L300 108 L300 120 L170 120Z" class="f-part2"></path>
+  ${T(235,36,"cola (casquillo 25 mm)","f-sm","middle")}
+  <rect x="172" y="56" width="70" height="2.5" fill="var(--accent)"></rect><rect x="172" y="105.5" width="70" height="2.5" fill="var(--accent)"></rect>
+  <rect x="242" y="56" width="5" height="52" class="f-part2"></rect>${T(250,150,"tope","f-sm","middle")}<path d="M248 140 L245 112" class="f-ink"></path>
+  <path d="M20 58.5 L240 58.5 L240 67 L20 67Z" class="f-part"></path><path d="M20 97 L240 97 L240 105.5 L20 105.5Z" class="f-part"></path>
+  ${T(30,90,"tubo de presión","f-sm")}
+  <path d="M60 140 L120 140" class="f-ink" marker-end="url(#arr)"></path>${T(20,160,"entra girando hasta el tope","f-sm")}
+  ${T(140,20,"gotas en la orilla del casquillo","f-acct")}`,"U5: tubo en la cola");
+F.u3=()=>svgw(170,`
+  <path d="M170 40 L300 40 L300 52 L170 52Z" class="f-part2"></path><path d="M170 112 L300 112 L300 124 L170 124Z" class="f-part2"></path>
+  ${T(235,32,"casquillo del tubo (20 mm)","f-sm","middle")}
+  <rect x="172" y="52" width="70" height="2.5" fill="var(--accent)"></rect><rect x="172" y="109.5" width="70" height="2.5" fill="var(--accent)"></rect>
+  <rect x="242" y="52" width="5" height="60" class="f-part2"></rect>
+  <path d="M10 30 L60 30 L110 54.5 L240 54.5 L240 63 L110 63 L60 40 L10 40Z" class="f-part"></path>
+  <path d="M10 134 L60 134 L110 109.5 L240 109.5 L240 101 L110 101 L60 124 L10 124Z" class="f-part"></path>
+  ${T(30,86,"segmento superior (bahía arriba)","f-sm")}
+  <path d="M120 146 L180 146" class="f-ink" marker-end="url(#arr)"></path>${T(20,160,"entra girando hasta el fondo","f-sm")}`,"U3: segmento superior en el tubo");
+F.u6=()=>{
+  const cx=90,cy=90;let fins="";
+  [90,210,330].map(a=>{const r=a*Math.PI/180,ux=Math.cos(r),uy=-Math.sin(r);
+    fins+=`<line x1="${cx+ux*20}" y1="${cy+uy*20}" x2="${cx+ux*66}" y2="${cy+uy*66}" stroke="var(--ink)" stroke-width="4"></line>`;
+    fins+=`<line x1="${cx}" y1="${cy}" x2="${cx+ux*76}" y2="${cy+uy*76}" class="f-dash"></line>`;});
+  return svgw(190,`
+  <circle cx="${cx}" cy="${cy}" r="78" fill="none" stroke="var(--line)"></circle>
+  <circle cx="${cx}" cy="${cy}" r="20" class="f-part"></circle><circle cx="${cx}" cy="${cy}" r="17.6" fill="var(--paper)" stroke="var(--ink)"></circle>
+  ${fins}${T(cx,184,"vista desde la base · 120°","f-sm","middle")}
+  <g transform="translate(200,40)">
+    <rect x="0" y="80" width="110" height="14" class="f-part"></rect>
+    <rect x="44" y="58" width="6" height="22" class="f-part2"></rect><rect x="60" y="58" width="6" height="22" class="f-part2"></rect>
+    <rect x="51" y="0" width="8" height="80" class="f-part"></rect>
+    <path d="M44 58 L51 40 L51 58Z M66 58 L59 40 L59 58Z" class="f-epoxy"></path>
+    ${T(55,112,"Kola Loka por","f-acct","middle")}${T(55,124,"ambos lados","f-sm","middle")}
+    ${T(-4,74,"riel","f-sm","end")}
+  </g>`,"U6: alerones a 120 grados");};
+F.cure=()=>svgw(130,`
+  <circle cx="70" cy="65" r="44" class="f-part"></circle><path d="M70 65 L70 32 M70 65 L96 80" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"></path>
+  ${T(70,126,"24 h","f-acct","middle")}
+  <rect x="190" y="20" width="18" height="80" rx="9" class="f-part"></rect><circle cx="199" cy="108" r="14" fill="var(--accent)"></circle><rect x="195" y="50" width="8" height="58" fill="var(--accent)"></rect>
+  ${T(220,60,"≥ 20 °C","f-txt")}${T(220,76,"vertical,","f-sm")}${T(220,89,"en el mandril","f-sm")}`,"Curado");
+F.foam=()=>svgw(130,`
+  <circle cx="80" cy="62" r="46" fill="var(--warn-soft)" stroke="var(--warn)"></circle>${T(80,66,"Ø38","f-txt","middle")}${T(80,124,"piso de la bahía","f-sm","middle")}
+  <circle cx="220" cy="62" r="36" fill="var(--warn-soft)" stroke="var(--warn)"></circle>${T(220,66,"Ø30","f-txt","middle")}${T(220,124,"cara plana de la tapa","f-sm","middle")}`,"Discos de foami");
+F.tapa=()=>svgw(160,`
+  <path d="M10 80 Q 80 30 160 40 L200 40 L200 46 L232 46 L232 114 L200 114 L200 120 L160 120 Q 80 130 10 80Z" class="f-part"></path>
+  <rect x="212" y="52" width="10" height="56" class="f-part2"></rect><rect x="222" y="44" width="4" height="72" class="f-part2"></rect>
+  <rect x="226" y="54" width="4" height="52" fill="var(--warn-soft)" stroke="var(--warn)"></rect>
+  <circle cx="214" cy="50" r="3.5" fill="var(--accent)"></circle>
+  ${T(240,58,"tapa (labio dentro","f-sm")}${T(240,70,"del hombro)","f-sm")}${T(240,100,"foami Ø30","f-sm")}${T(150,150,"1 gota de cianoacrilato","f-acct","middle")}<path d="M180 140 L212 54" class="f-acc"></path>`,"U2: tapa en la nariz");
+F.sensor=()=>svgw(190,`
+  <rect x="40" y="20" width="16" height="160" class="f-part"></rect><rect x="200" y="20" width="16" height="160" class="f-part"></rect>
+  <rect x="56" y="160" width="144" height="10" class="f-part2"></rect>${T(128,186,"piso de la bahía","f-sm","middle")}
+  <rect x="56" y="153" width="144" height="7" fill="var(--warn-soft)" stroke="var(--warn)"></rect>
+  <rect x="70" y="40" width="116" height="113" class="f-part2"></rect>${T(128,96,"sensor","f-txt","middle")}${T(128,110,"38 mm de alto","f-sm","middle")}
+  <path d="M62 14 L62 156 L120 156" stroke="var(--accent)" stroke-width="3" fill="none"></path>
+  <path d="M62 14 L80 14" stroke="var(--accent)" stroke-width="3"></path>
+  ${T(226,30,"listón para jalarlo","f-acct")}${T(226,44,"(queda doblado","f-sm")}${T(226,56,"bajo la nariz)","f-sm")}
+  <circle cx="176" cy="52" r="5" fill="var(--ok)"></circle>${T(226,90,"enciéndelo antes","f-txt")}${T(226,104,"de meterlo","f-sm")}`,"U4: sensor en la bahía");
+F.close=()=>svgw(120,`
+  <path d="M10 60 Q 60 25 120 30 L150 30 L150 90 L120 90 Q 60 95 10 60Z" class="f-part"></path>
+  <rect x="150" y="30" width="150" height="60" class="f-part2"></rect>
+  <path d="M100 60 L140 60" class="f-ink" marker-end="url(#arr)"></path>
+  ${T(225,64,"bahía","f-txt","middle")}${T(10,108,"desliza hasta el tope y sacude:","f-sm")}${T(10,119,"el sensor no debe sonar","f-sm")}`,"U1: cerrar con la nariz");
+F.tape=()=>svgw(130,`
+  <path d="M10 60 Q 60 25 120 30 L150 30 L150 90 L120 90 Q 60 95 10 60Z" class="f-part"></path>
+  <rect x="150" y="30" width="150" height="60" class="f-part2"></rect>
+  <rect x="118" y="34" width="66" height="9" fill="var(--ink)" opacity=".85"></rect><path d="M184 34 L192 30 L192 41 L184 43Z" fill="var(--accent)"></path>
+  <rect x="118" y="77" width="66" height="9" fill="var(--ink)" opacity=".55"></rect>
+  ${T(150,14,"2 tiras de 6 cm a lo largo,","f-sm","middle")}${T(150,25,"una enfrente de la otra","f-sm","middle")}${T(196,40,"punta doblada","f-acct")}`,"Cinta en la junta de la nariz");
+F.balance=()=>svgw(150,`
+  <path d="M10 60 Q 30 50 50 48 L120 48 L140 56 L300 56 L300 64 L140 64 L120 72 L50 72 Q 30 70 10 60Z" class="f-part"></path>
+  <path d="M150 104 L166 76 L182 104Z" fill="var(--ink)"></path>
+  <rect x="150" y="78" width="32" height="6" fill="var(--ok)" opacity=".35"></rect>
+  <circle cx="160" cy="60" r="5" fill="none" stroke="var(--ink)" stroke-width="1.5"></circle><path d="M160 55 L160 65 M155 60 L165 60" stroke="var(--ink)"></path>
+  <circle cx="221" cy="60" r="5" fill="var(--accent)"></circle>
+  ${T(160,124,"CM: equilibrio entre 235 y 255 mm","f-txt","middle")}${T(221,40,"CP ≈ 337 mm","f-acct","middle")}${T(10,142,"medido desde la punta de la nariz","f-sm")}`,"Punto de equilibrio");
+F.mandrelOut=()=>svgw(120,`
+  <rect x="20" y="50" width="280" height="20" class="f-part2"></rect>
+  <path d="M60 50 L60 70 M100 50 L100 70" stroke="var(--accent)" stroke-dasharray="2 2"></path>
+  <path d="M180 30 A 20 8 0 1 1 200 30" class="f-ink" marker-end="url(#arr)"></path>${T(210,28,"gira y saca","f-sm")}
+  ${T(20,96,"¿pegamento dentro de la guía?","f-sm")}${T(20,109,"líjalo hasta que deslice","f-sm")}`,"Sacar del mandril");
+
+/* ---------- pasos ---------- */
+const PH=[
+ {id:"materiales",n:"0",name:"Materiales",lot:true},
+ {id:"impresion",n:"1",name:"Impresión",lot:true},
+ {id:"preparacion",n:"2",name:"Preparación"},
+ {id:"dia-1",n:"3",name:"Día 1 · Pegado"},
+ {id:"dia-2",n:"4",name:"Día 2 · Sensor"},
+ {id:"revision",n:"5",name:"Revisión final"},
+ {id:"prueba",n:"6",name:"Prueba estática"},
+ {id:"entre-vuelos",n:"7",name:"Entre vuelos"}
+];
+const STEPS={
+"preparacion":[
+ {id:"p-insp",t:"Revisa cada pieza a contraluz",f:"inspect",b:`<p>Quita el brim con el cutter. Mira cada pieza contra una lámpara.</p><ul><li>Piezas de presión (3, 4 y 5) con <b>capas separadas, huecos o grietas: se descartan</b>, no se reparan.</li><li>Pésala: debe quedar dentro de ±10 % de su masa de plano (nariz 11.6 g · segmento 34.5 g · tubo 15.0 g · cola 13.1 g · alerón 2.7 g).</li></ul>`},
+ {id:"p-guia",t:"Ajusta la guía de la cola",f:"ream",b:`<ol><li>Prueba primero el <b>anillo de prueba (105A)</b> en el tubo lanzador: debe bajar por su propio peso, sin bambolearse.</li><li>Enrolla lija 220 en el tubo PVC de 1/2" y lija el interior de la guía girando, sin cargar hacia un lado.</li><li>Prueba seguido. Para cuando la cola baje sola y no tenga juego lateral.</li></ol><div class="note">Si el anillo ya quedó flojo antes de lijar, no imprimas la cola así: reduce la compensación de agujeros en Cura y vuelve a imprimir el anillo.</div>`},
+ {id:"p-seco",t:"Prueba los casquillos en seco",f:"sockets",b:`<ul><li><b>U3:</b> el extremo del segmento superior entra en el casquillo del tubo de presión.</li><li><b>U5:</b> el extremo delgado del tubo de presión entra en la cola hasta el tope.</li></ul><p>Deben entrar a mano, sin forzar y <b>sin juego visible</b>: el Kola Loka se mete solo en juntas apretadas, pero no rellena huecos. Si entran forzados, lija el interior del casquillo solo lo necesario.</p><div class="note">El extremo del tubo que imprimiste sobre la cama puede tener "pata de elefante". Pásale lija 220 a los primeros 1–2 mm si no entra en la cola.</div>`},
+ {id:"p-lija",t:"Lija las zonas de pegado",f:"zones",b:`<p>Con grano 120, hasta que queden opacas y rayadas:</p><ul><li>20 mm del extremo del segmento superior (U3).</li><li>Últimos 25 mm del tubo de presión (U5).</li><li>La raíz de cada alerón (U6).</li></ul>`},
+ {id:"p-aler",t:"Prepara los alerones",f:"fin",b:`<ul><li>Limpia las 3 canaletas de la cola con la punta del cutter.</li><li>Cada alerón debe entrar en su canaleta <b>sin forzar</b>.</li><li>Redondea el borde de ataque (el inclinado) con lija 220. El borde de salida se deja recto.</li></ul>`},
+ {id:"p-nariz",t:"Ajusta la nariz",f:"nose",b:`<p>Lija el hombro con 220 hasta que entre en la bahía deslizando, sin juego. Es la puerta del sensor: la vas a abrir muchas veces.</p>`},
+ {id:"p-puertos",t:"Repasa los 3 puertos estáticos",f:"ports",b:`<p>Pasa la broca de 2 mm <b>girándola a mano</b> por cada puerto de la bahía. Por ahí el sensor lee la presión del aire; deben quedar limpios.</p>`},
+ {id:"p-ipa",t:"Desengrasa",f:"ipa",timer:{s:300,l:"Secado"},b:`<p>Limpia todas las zonas que vas a pegar con alcohol isopropílico, o con agua y jabón, y deja secar bien 5 min. Desde aquí no las toques con los dedos.</p><div class="note bad">No uses acetona: debilita el PLA.</div>`}
+],
+"dia-1":[
+ {id:"d1-mandril",t:"Prepara el mandril",f:"mandrel",b:`<p>Envuelve el tubo PVC de 1/2" (50 cm) con una bolsa de plástico o cinta canela: el Kola Loka no pega en la bolsa. Sujétalo <b>vertical</b> en un tornillo de banco o una base.</p><p>El mandril mantiene la cola, el tubo y el segmento en línea mientras pegas.</p>`},
+ {id:"d1-ca",t:"Prepara el Kola Loka",f:"ca",b:`<ul><li>Guantes de nitrilo y un lugar ventilado.</li><li>Trabaja sobre plástico o papel encerado.</li><li>Usa <b>pocas gotas</b>: si se acumula, tarda en secar, se pone blanco y queda quebradizo.</li></ul><div class="note bad">No limpies con algodón ni con papel de algodón: el cianoacrilato reacciona con el algodón, se calienta mucho y puede humear.</div>`},
+ {id:"d1-u5",t:"U5 · Tubo de presión en la cola",tag:"U5",f:"u5",timer:{s:60,l:"Entre aplicaciones"},b:`<ol><li>Arma <b>en seco</b>: mete el tubo girando hasta que toque el tope.</li><li>Desliza el conjunto en el mandril, con la base de la cola abajo.</li><li>Deja caer 3–4 gotas alrededor de la orilla del casquillo (arriba). Se meten solas en la junta.</li><li>Espera 1 min y repite una vez.</li></ol><div class="note">Si escurre por fuera, déjalo secar y líjalo después.</div>`},
+ {id:"d1-u3",t:"U3 · Segmento superior sobre el tubo",tag:"U3",f:"u3",timer:{s:60,l:"Entre aplicaciones"},b:`<ol><li>En seco, mete el extremo del segmento superior en el casquillo del tubo, girando hasta el fondo, con la bahía hacia arriba.</li><li>Míralo de frente y de lado: debe verse recto sobre el mandril.</li><li>3–4 gotas alrededor de la orilla del casquillo; espera 1 min y repite una vez.</li></ol>`},
+ {id:"d1-u6",t:"U6 · Alerones",tag:"U6",f:"u6",b:`<ol><li>Mete los 3 alerones <b>en seco</b>, con el borde inclinado hacia arriba y el borde de salida <b>al ras de la base</b>. Revisa desde abajo que queden a 120° y derechos.</li><li>Saca el cuerpo del mandril y acuéstalo con un alerón hacia arriba.</li><li>Pasa una línea fina de Kola Loka por ambos lados de la raíz, sobre los rieles. Se mete en la canaleta.</li><li>Espera 1 min, gira el cohete y repite con los otros dos.</li><li>Regresa el cuerpo al mandril.</li></ol><div class="note">No hagas cordones gruesos solo de Kola Loka: no seca bien y queda quebradizo. Opcional: espolvorea bicarbonato de sodio sobre una línea fresca para formar un cordón duro de refuerzo.</div>`},
+ {id:"d1-sello",t:"Sella U3 y U5 con cinta aislante",f:"seal",b:`<p>Después de 1 h, cubre cada junta con <b>1½ vueltas de cinta aislante bien estirada</b>, sin arrugas. Termina la vuelta con la punta hacia la cola, para que el aire no la levante en vuelo.</p><p>El Kola Loka da la resistencia; la cinta es el sello contra fugas.</p>`},
+ {id:"d1-cura",t:"Deja curar 24 h",f:"cure",cure:true,b:`<p>El Kola Loka seca en segundos, pero llega a su resistencia completa en un día. Déjalo vertical, a 20 °C o más.</p><div class="note bad">No metas presión a este cohete antes de que termine el curado.</div>`}
+],
+"dia-2":[
+ {id:"d2-saca",t:"Saca el cuerpo del mandril",f:"mandrelOut",b:`<p>Gíralo y sácalo. Revisa que no haya pegamento dentro de la guía; si lo hay, líjalo con el mandril y lija 220 hasta que vuelva a deslizar sobre el tubo lanzador.</p>`},
+ {id:"d2-foami",t:"Corta los discos de foami",f:"foam",b:`<p>Foami liso de 2 mm: un disco de <b>Ø38</b> para el piso de la bahía y uno de <b>Ø30</b> para la tapa.</p>`},
+ {id:"d2-tapa",t:"U2 · Tapa en la nariz",tag:"U2",f:"tapa",timer:{s:30,l:"Presionar"},b:`<ol><li>Pega el disco de Ø30 en la cara plana de la tapa con Kola Loka y presiona 30 s.</li><li>Mete el labio de la tapa a presión en el hombro de la nariz, con el foami del lado que mira al sensor.</li><li>Fija con una gota de Kola Loka. La tapa sale junto con la nariz.</li></ol><div class="note">Hazlo sin el sensor adentro y deja ventilar 10 min antes de meterlo: los vapores del cianoacrilato pueden afectar sus puertos.</div>`},
+ {id:"d2-sensor",t:"U4 · Sensor",tag:"U4",f:"sensor",b:`<ol><li>Coloca el disco de Ø38 en el piso de la bahía.</li><li>Pon una tira de listón que pase por debajo del sensor y suba por un costado: así lo sacas jalándola.</li><li><b>Enciende o arma el sensor</b> y mételo de pie, con su lado de 38 mm a lo largo del cohete.</li></ol>`},
+ {id:"d2-cierra",t:"U1 · Cierra con la nariz",tag:"U1",f:"close",b:`<p>Desliza el hombro en la bahía hasta el tope, con la punta del listón doblada bajo la nariz. Sacude el cohete: el sensor no debe sonar. Si suena, agrega otro disco de foami en la tapa.</p>`},
+ {id:"d2-cinta",t:"Fija la nariz con cinta",f:"tape",b:`<p>Dos tiras de cinta aislante de unos 6 cm sobre la junta, una enfrente de la otra, a lo largo del cohete y lo más lisas posible. Dobla la punta de cada tira para despegarla fácil.</p>`}
+]};
+const REVIEW=[
+ ["r-masa","<b>Masa:</b> entre 100 y 110 g con sensor (mínimo del reglamento: 80 g)."],
+ ["r-cg","<b>Punto de equilibrio:</b> entre 235 y 255 mm desde la punta (usa la calculadora)."],
+ ["r-recto","<b>Recto:</b> al rodarlo sobre una mesa plana no cabecea."],
+ ["r-aler","<b>Alerones:</b> firmes, sin juego, a 120° y sin torcerse."],
+ ["r-guia","<b>Guía:</b> desliza sobre el tubo lanzador en todo su largo, sin juego lateral."],
+ ["r-union","<b>U3 y U5:</b> cinta de sellado lisa, sin arrugas ni orillas levantadas."],
+ ["r-puertos","<b>Puertos estáticos:</b> los 3 abiertos, sin cinta ni pegamento encima."],
+ ["r-sensor","<b>Sensor:</b> encendido y sin juego."],
+ ["r-nariz","<b>Nariz:</b> asentada hasta el tope, cinta lisa."],
+ ["r-id","<b>Identificación:</b> número de cohete y masa escritos con plumón."]
+];
+const MATS=[
+ ["m-ca","Cianoacrilato","Krazy Kola Loka (el que tienen)","Resistol 911","2–3 tubos para el lote",""],
+ ["m-cinta","Cinta aislante","La que tienen (vinil, 19 mm)","3M Temflex 1700","1 rollo",""],
+ ["m-bic","Bicarbonato de sodio (opcional)","El de la cocina","—","Una pizca por cohete",""],
+ ["m-epo","Epóxico (opcional, sella solo U3/U5)","Devcon 2 Ton transparente, 30 min, 25 ml","Loctite Epoxi Bonder 25 g","1 jeringa","https://itwperformancepolymers.com/wp-content/uploads/14260-DEVCON%C2%AE-2-Ton%C2%AE-Epoxy-Mexico-Spanish.pdf"],
+ ["m-mask","Masking tape","Scotch 18 mm","Cualquiera de 18–24 mm","1 rollo",""],
+ ["m-foami","Foami (goma EVA)","Liso de 2 mm, tamaño carta","Cualquier foami liso de 2 mm","1 hoja",""],
+ ["m-ipa","Alcohol isopropílico","Silimex 1 L","Steren LIM-ALH-L 1 L","1 L","https://www.cyberpuerta.mx/Computadoras/Accesorios-para-PC-s/Limpiadores-para-Electronicos/Silimex-Alcohol-Isopropilico-para-Limpieza-de-PC-s-y-Electronica-1-Litro-3.html"],
+ ["m-l120","Lija de agua 120","Truper LIAG-120","Grano 100–150","2 hojas","https://truper.com/ficha_merca/ficha-print.php?code=11620"],
+ ["m-l220","Lija de agua 220","Truper LIAG-220","Grano 180–240","2 hojas","https://truper.com/ficha_merca/ficha-print.php?code=11623"],
+ ["m-pvc","Mandril","Tubo PVC hidráulico céd. 40 de 1/2\" (Ø ext. ≈ 21.3)","Un tramo del tubo lanzador","50 cm + bolsa o cinta canela","https://www.truper.com/ficha_tecnica_pdf/views/ficha-print.php?id=7440"],
+ ["m-liston","Listón delgado","Listón de 3–6 mm","Cinta de tela","20 cm por cohete",""],
+ ["m-broca","Broca","2 mm","5/64\"","1",""],
+ ["m-bascula","Báscula","Digital de 0.1 g","La del laboratorio","1",""],
+ ["m-epp","Protección","Guantes de nitrilo y lentes de policarbonato","Guantes de látex, careta","1 caja / 1 por persona",""],
+ ["m-varios","Varios","Abatelenguas, cutter, plumón, vernier","Tarjeta de plástico para mezclar","—",""]
+];
+const PRINT=[
+ ["105A","Anillo de prueba","100 %","1.2","0.2","Brim 5","50 %","1","~25 min","Base sobre la cama"],
+ ["105","Cola","100 %","1.2","0.2","Brim 5","50 %","1","~2 h","Base sobre la cama"],
+ ["104","Tubo de presión","100 %","1.2","0.2","Brim 5","50 %","1","~2 h 40 min","Extremo delgado (Ø25.4) sobre la cama, casquillo arriba"],
+ ["103","Segmento superior","100 %","1.2","0.2","Brim 5","50 %","1","5 h 10 min","Tubo delgado sobre la cama, bahía arriba"],
+ ["106","Alerones (placa ×4)","100 %","0.8","0.2","Sin brim","100 %","4","~2 h","Planos"],
+ ["102","Tapas","100 %","0.8","0.2","Sin brim","100 %","4","~1 h 15 min","Placa sobre la cama"],
+ ["101","Narices","0 %","0.8","0.16","Brim 5","100 %","2","~5 h 30 min","Hombro sobre la cama, punta arriba"]
+];
+const ORDERP=[
+ ["o1","Fase 1","Anillo de prueba 105A","Pruébalo en el tubo lanzador antes de seguir"],
+ ["o2","Fase 1","Cola 105",""],["o3","Fase 1","Tubo de presión 104",""],["o4","Fase 1","Segmento superior 103","De noche"],
+ ["o5","Fase 1","Placa de 4 alerones","Con esto armas el cuerpo de prueba estática"],
+ ["o6","Fase 1","4 tapas 102","Mientras cura el cuerpo de prueba"],["o7","Fase 1","2 narices 101","De noche"],
+ ["o8","Fase 2","4 segmentos superiores 103","Solo si pasó la prueba estática. Uno por noche"],
+ ["o9","Fase 2","4 tubos de presión 104","Uno por impresión"],["o10","Fase 2","4 colas 105","Uno por impresión"],
+ ["o11","Fase 2","3 placas de alerones",""],["o12","Fase 2","2 narices 101",""]
+];
+const STATIC=[60,80,100,110];
+
+/* ---------- render ---------- */
+const CHECK='<svg viewBox="0 0 20 20"><path d="M4 10.5 L8.5 15 L16 6" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>';
+function stepCard(s,i){
+  const done=!!state.done[s.id];
+  let x=`<article class="step${done?" done":""}" id="${s.id}"><div><div class="k"><button class="check" data-step="${s.id}" aria-pressed="${done}" aria-label="Marcar paso ${i+1} como hecho">${CHECK}</button><div><h3>${i+1}. ${s.t}${s.tag?`<span class="tag">${s.tag}</span>`:""}</h3><div class="txt">${s.b}</div>`;
+  if(s.timer)x+=`<div class="timer" data-s="${s.timer.s}"><span class="lab">${s.timer.l}</span><span class="t">${fmt(s.timer.s)}</span><button class="btn">Iniciar</button></div>`;
+  if(s.cure)x+=`<div class="cure" id="cureBox"></div>`;
+  x+=`</div></div></div><figure class="fig">${F[s.f]()}</figure></article>`;
+  return x;
+}
+function fmt(s){s=Math.max(0,Math.round(s));const m=Math.floor(s/60),r=s%60;return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0")}
+function render(){
+  const m=document.getElementById("main");let h="";
+  PH.forEach(ph=>{
+    h+=`<section id="sec-${ph.id}" aria-labelledby="h-${ph.id}">`;
+    if(ph.id==="materiales"){
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Materiales</h2><p>Lo que hay que comprar para el lote completo: 3 cohetes de vuelo, 1 cuerpo para la prueba estática y repuestos. Esta lista es la misma para todos los cohetes.</p></div></div>`;
+      h+=`<div class="tablebox"><table><thead><tr><th></th><th>Material</th><th>Recomendado</th><th>Si no hay</th><th>Cantidad</th></tr></thead><tbody>`;
+      MATS.forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" id="${r[0]}" ${lot.done[r[0]]?"checked":""}><label class="mono" for="${r[0]}" style="position:absolute;left:-9999px">Comprado</label></td><td><b>${r[1]}</b></td><td>${r[5]?`<a href="${r[5]}" target="_blank" rel="noopener">${esc(r[2])}</a>`:esc(r[2])}</td><td>${esc(r[3])}</td><td class="n">${esc(r[4])}</td></tr>`});
+      h+=`</tbody></table></div>`;
+    } else if(ph.id==="impresion"){
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Impresión</h2><p>Ajustes de Cura por pieza y el orden recomendado para todo el lote. Las piezas de presión van <b>una por impresión</b>, de pie como vienen en el STL y sin soporte.</p></div></div>`;
+      h+=`<div class="tablebox"><h3>Ajustes por pieza (Ender-3, PLA, boquilla 0.4)</h3><table><thead><tr><th>Plano</th><th>Pieza</th><th>Infill</th><th>Paredes mm</th><th>Capa mm</th><th>Adhesión</th><th>Ventilador</th><th>Por cama</th><th>Tiempo</th><th>Orientación</th></tr></thead><tbody>`;
+      PRINT.forEach(r=>{h+=`<tr><td class="n">${r[0]}</td><td><b>${r[1]}</b></td><td class="n">${r[2]}</td><td class="n">${r[3]}</td><td class="n">${r[4]}</td><td>${r[5]}</td><td class="n">${r[6]}</td><td class="n">${r[7]}</td><td class="n">${r[8]}</td><td>${r[9]}</td></tr>`});
+      h+=`</tbody></table></div>`;
+      h+=`<div class="note">En todas: 210 °C, 40 mm/s, arriba/abajo 0.8 mm, soporte apagado, ventilador apagado en la primera capa, tiempo mínimo por capa 10 s. Si la masa que da Cura es mucho mayor que la del plano, casi siempre se coló soporte.</div>`;
+      h+=`<div class="note bad">Tubo de presión: usa el STL corregido (extremo delgado abajo). Con el casquillo abajo solo apoya un anillo de 0.6 mm y se despega.</div><div style="height:12px"></div>`;
+      h+=`<div class="tablebox"><h3>Orden de impresión del lote (≈ 70 h)</h3><table><thead><tr><th></th><th>Fase</th><th>Impresión</th><th>Nota</th></tr></thead><tbody>`;
+      ORDERP.forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" aria-label="Impreso: ${esc(r[2])}" ${lot.done[r[0]]?"checked":""}></td><td class="n">${r[1]}</td><td><b>${r[2]}</b></td><td>${r[3]}</td></tr>`});
+      h+=`</tbody></table></div>`;
+    } else if(STEPS[ph.id]){
+      const sub={"preparacion":"Ajustar en seco y limpiar. Unos 30 min por cohete; evita la mayoría de las fallas.","dia-1":"Uniones permanentes U5, U3 y U6 con Kola Loka y sellado con cinta aislante. Unos 40 min de trabajo y 24 h de curado.","dia-2":"Sensor y nariz, después del curado. Unos 15 min."}[ph.id];
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">${ph.name}</h2><p>${sub}</p></div><span class="pill" id="pill-${ph.id}"></span></div>`;
+      STEPS[ph.id].forEach((s,i)=>h+=stepCard(s,i));
+    } else if(ph.id==="revision"){
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Revisión final</h2><p>Un cohete solo sale a la plataforma si pasa todo. Lo más importante es el punto de equilibrio: si queda muy atrás, el cohete se vuelve inestable.</p></div><span class="pill" id="pill-${ph.id}"></span></div>`;
+      h+=`<div class="calc"><div><h3 style="font-size:18px">Calculadora de estabilidad</h3><p style="margin:6px 0 0;color:var(--muted);font-size:13.5px">Pesa el cohete armado con sensor y apóyalo de lado sobre el filo de una regla hasta que se equilibre. Mide desde la punta de la nariz.</p>
+        <label for="inMass">Masa medida (g)</label><input id="inMass" inputmode="decimal" value="${esc(state.mass)}" placeholder="106.5">
+        <label for="inX">Punto de equilibrio (mm desde la punta)</label><input id="inX" inputmode="decimal" value="${esc(state.xcm)}" placeholder="243"></div>
+        <div><div class="verdict" id="verdict"></div><figure class="fig" style="margin-top:10px">${F.balance()}</figure></div></div>`;
+      h+=`<div class="tablebox"><table><tbody>`;
+      REVIEW.forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-step="${r[0]}" aria-label="Revisado" ${state.done[r[0]]?"checked":""}></td><td>${r[1]}</td></tr>`});
+      h+=`</tbody></table></div>`;
+    } else if(ph.id==="prueba"){
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Prueba estática</h2><p>Se hace con el cuarto cuerpo ("Prueba estática" arriba), armado igual que uno de vuelo y con 24 h de curado. Ningún cohete vuela a más presión que el último escalón que pasó.</p></div><span class="pill" id="pill-${ph.id}"></span></div>`;
+      h+=`<div class="tablebox"><h3>Antes del primer escalón: prueba de fugas</h3><table><tbody><tr class="chk"><td><input type="checkbox" class="mini" data-step="s-fugas" aria-label="Prueba de fugas sin burbujas" ${state.done["s-fugas"]?"checked":""}></td><td>Mete 20–30 PSI y pasa agua con jabón por U3 y U5. Márcalo solo si no salen burbujas. Si burbujea, refuerza esa junta con cinta y repite.</td></tr></tbody></table></div>`;
+      h+=`<div class="tablebox"><h3>Escalones: 3 disparos por presión</h3><table><thead><tr><th>Presión</th><th>Disparo 1</th><th>Disparo 2</th><th>Disparo 3</th><th>Empuje inicial*</th></tr></thead><tbody>`;
+      const Fn={60:147,80:197,100:246,110:270};
+      STATIC.forEach(p=>{h+=`<tr><td class="n"><b>${p} PSI</b></td>`;[1,2,3].forEach(k=>{const id=`s-${p}-${k}`;h+=`<td><input type="checkbox" class="mini" data-step="${id}" aria-label="${p} PSI disparo ${k} sin daño" ${state.done[id]?"checked":""}></td>`});h+=`<td class="n">${Fn[p]} N</td></tr>`});
+      h+=`</tbody></table><p style="padding:0 12px 10px;font-size:12.5px;color:var(--muted)">Marca un disparo solo si después no hay grietas, ni fugas audibles, ni deformación, y la guía sigue deslizando. *Con tubo lanzador de Ø21.3 (sin confirmar).</p></div>`;
+      h+=`<div class="note">Revisa después de cada disparo: U3, U5, la mampara, la pared del tubo y los alerones. Las marcas blanquecinas en el PLA indican que el plástico se estiró.</div><div style="height:12px"></div>`;
+      h+=`<div class="tablebox"><h3>Si algo falla</h3><table><thead><tr><th>Dónde</th><th>Causa probable</th><th>Qué cambiar</th></tr></thead><tbody>
+        <tr><td>Burbujas en U3 o U5 en la prueba de fugas</td><td>El Kola Loka no llenó toda la junta</td><td>Más gotas en la orilla, espera 1 h y vuelve a encintar</td></tr>
+        <tr><td>U3 o U5 se despega y el PLA sale limpio</td><td>Sin lijar, con grasa o sin curar</td><td>Lija 120, desengrasa y cura 24 h completas</td></tr>
+        <tr><td>U3 o U5 se despega arrancando plástico</td><td>La unión aguantó más que la pieza</td><td>Revisa la impresión del casquillo</td></tr>
+        <tr><td>Capas separadas en el tubo o la mampara</td><td>Mala unión entre capas</td><td>215 °C, filamento seco, 4 perímetros; repite la prueba</td></tr>
+        <tr><td>Se despega un alerón</td><td>Raíz sin lijar o poco pegamento en la canaleta</td><td>Lija la raíz y agrega un cordón de Kola Loka con bicarbonato</td></tr>
+        <tr><td>La guía se atora después del disparo</td><td>La cola se deformó</td><td>Vuela solo al último escalón que pasó</td></tr></tbody></table></div>`;
+    } else if(ph.id==="entre-vuelos"){
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Entre vuelos</h2><p>Cómo sacar el sensor para leerlo y qué cambiar si algo se rompe.</p></div></div>`;
+      h+=`<article class="step"><div><h3>Sacar y volver a meter el sensor</h3><div class="txt"><ol><li>Despega las 2 tiras de cinta y jala la nariz: sale con la tapa.</li><li>Jala el listón (o voltea el cohete con la boca hacia tu mano). El sensor sale solo.</li><li>Lee o descarga los datos fuera del cohete.</li><li>Para volver: enciéndelo, mételo de pie sobre el foami, coloca la nariz y pon <b>cinta nueva</b>.</li></ol></div></div><figure class="fig">${F.sensor()}</figure></article>`;
+      h+=`<div class="tablebox"><h3>Reparaciones</h3><table><tbody>
+        <tr><td><b>Pieza de presión dañada (3, 4 o 5)</b></td><td>No se repara: usa el cuerpo de repuesto.</td></tr>
+        <tr><td><b>Alerón roto</b></td><td>Córtalo al ras, limpia la canaleta con el cutter y pega uno de repuesto (U6).</td></tr>
+        <tr><td><b>Nariz o tapa rota</b></td><td>Se cambian completas; son desmontables.</td></tr>
+        <tr><td><b>Cinta de la nariz</b></td><td>Nueva en cada vuelo.</td></tr></tbody></table></div>`;
+    }
+    h+=`</section>`;
+  });
+  m.innerHTML=h;
+  bind();
+  renderNav();renderCure();renderVerdict();
+}
+function phaseIds(id){
+  if(STEPS[id])return STEPS[id].map(s=>s.id);
+  if(id==="revision")return REVIEW.map(r=>r[0]);
+  if(id==="prueba")return ["s-fugas"].concat(STATIC.flatMap(p=>[1,2,3].map(k=>`s-${p}-${k}`)));
+  if(id==="materiales")return MATS.map(r=>r[0]);
+  if(id==="impresion")return ORDERP.map(r=>r[0]);
+  return [];
+}
+function countPh(ph){const ids=phaseIds(ph.id);const src=ph.lot?lot.done:state.done;return [ids.filter(i=>src[i]).length,ids.length]}
+function renderNav(){
+  let h="";let tot=0,dn=0;
+  PH.forEach(ph=>{const [d,n]=countPh(ph);if(!ph.lot&&ph.id!=="entre-vuelos"){tot+=n;dn+=d}
+    h+=`<a href="#${ph.id}" data-ph="${ph.id}"><span class="ix">${ph.n}</span><span>${ph.name}</span><span class="cnt">${n?d+"/"+n:""}</span><span class="bar"><i style="width:${n?100*d/n:0}%"></i></span></a>`;
+    const pill=document.getElementById("pill-"+ph.id);
+    if(pill&&n){pill.textContent=d===n?"Completo":`${d} de ${n}`;pill.className="pill "+(d===n?"ok":"warn")}});
+  h+=`<div class="overall"><div>${esc(ROCKETS.find(r=>r.id===rocket).name)}</div><div class="big">${Math.round(100*dn/Math.max(tot,1))} %</div><div style="color:var(--muted)">${dn} de ${tot} pasos de armado</div></div>`;
+  document.getElementById("phases").innerHTML=h;
+  showPhase(currentPhase());
+}
+function currentPhase(){const h=(location.hash||"").slice(1);
+  if(PH.some(p=>p.id===h))return h;
+  for(const k in STEPS){if(STEPS[k].some(s=>s.id===h))return k}
+  return "preparacion";}
+function showPhase(id){
+  document.querySelectorAll("main section").forEach(s=>s.classList.toggle("on",s.id==="sec-"+id));
+  document.querySelectorAll("nav.phases a").forEach(a=>{if(a.dataset.ph===id)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current")});
+}
+function goStep(stepId){
+  let ph=null;for(const k in STEPS){if(STEPS[k].some(s=>s.id===stepId))ph=k}
+  if(!ph)return;
+  if(location.hash!=="#"+ph)history.replaceState(null,"","#"+ph);
+  showPhase(ph);
+  const el=document.getElementById(stepId);
+  if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"start"});
+    el.style.boxShadow="0 0 0 3px var(--accent)";setTimeout(()=>el.style.boxShadow="",1400)}
+}
+window.addEventListener("hashchange",()=>showPhase(currentPhase()));
+
+function bind(){
+  document.querySelectorAll(".step .check").forEach(b=>b.addEventListener("click",()=>{
+    const id=b.dataset.step;state.done[id]=!state.done[id];save();
+    const card=b.closest(".step");card.classList.toggle("done",!!state.done[id]);b.setAttribute("aria-pressed",!!state.done[id]);
+    if(id==="d1-cura"&&state.done[id]&&!state.cure){state.cure=Date.now();save();renderCure()}
+    renderNav();
+  }));
+  document.querySelectorAll("input[data-step]").forEach(c=>c.addEventListener("change",()=>{state.done[c.dataset.step]=c.checked;save();renderNav()}));
+  document.querySelectorAll("input[data-lot]").forEach(c=>c.addEventListener("change",()=>{lot.done[c.dataset.lot]=c.checked;saveLot();renderNav()}));
+  document.querySelectorAll(".timer").forEach(t=>{
+    const total=+t.dataset.s;let left=total,iv=null;const out=t.querySelector(".t"),b=t.querySelector("button");
+    b.addEventListener("click",()=>{
+      if(iv){clearInterval(iv);iv=null;left=total;out.textContent=fmt(left);b.textContent="Iniciar";t.classList.remove("ring");return}
+      const end=Date.now()+total*1000;b.textContent="Reiniciar";t.classList.remove("ring");
+      iv=setInterval(()=>{left=(end-Date.now())/1000;out.textContent=fmt(left);if(left<=0){clearInterval(iv);iv=null;out.textContent="Listo";b.textContent="Iniciar";t.classList.add("ring")}},250);
+    });
+  });
+  const im=document.getElementById("inMass"),ix=document.getElementById("inX");
+  if(im){[im,ix].forEach(i=>i.addEventListener("input",()=>{state.mass=im.value;state.xcm=ix.value;save();renderVerdict()}))}
+}
+function renderCure(){
+  const box=document.getElementById("cureBox");if(!box)return;
+  const H=24*3600e3;
+  if(!state.cure){box.className="cure";box.innerHTML=`<div>Cuando termines de pegar, inicia el contador de curado de este cohete.</div><div><button class="btn primary" id="cureStart">Empecé el curado ahora</button></div>`;
+    document.getElementById("cureStart").onclick=()=>{state.cure=Date.now();save();renderCure()};return}
+  const end=state.cure+H,left=end-Date.now(),pct=Math.min(100,100*(1-left/H));
+  const dt=new Date(end).toLocaleString("es-MX",{weekday:"long",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+  const ready=left<=0;box.className="cure"+(ready?" ready":"");
+  const hh=Math.floor(Math.max(0,left)/3600e3),mm=Math.floor(Math.max(0,left)%3600e3/60e3);
+  box.innerHTML=`<div class="t">${ready?"Curado completo":`${hh} h ${String(mm).padStart(2,"0")} min`}</div><div class="meter"><i style="width:${pct}%"></i></div><div style="font-size:13px;color:var(--muted)">${ready?"Ya puedes pasar al Día 2 y presurizar.":"Listo el "+dt+"."}</div><div><button class="btn" id="cureReset">Reiniciar contador</button></div>`;
+  document.getElementById("cureReset").onclick=()=>{state.cure=null;save();renderCure()};
+}
+setInterval(renderCure,30000);
+function renderVerdict(){
+  const v=document.getElementById("verdict");if(!v)return;
+  const m=parseFloat(String(state.mass).replace(",",".")),x=parseFloat(String(state.xcm).replace(",","."));
+  const CP=337.4,D=42;let h="";
+  if(isNaN(m)&&isNaN(x)){v.innerHTML=`<div class="vrow"><span>Escribe la masa y el punto de equilibrio que mediste.</span></div><div class="vrow"><span>Valores de diseño</span><span class="mono">106.5 g · 243.1 mm · 2.25 cal</span></div>`;return}
+  if(!isNaN(m)){const ok=m>=80;h+=`<div class="vrow"><span>Masa ${m.toFixed(1)} g</span><span class="pill ${ok?(m>=100&&m<=110?"ok":"warn"):"bad"}">${ok?(m>=100&&m<=110?"En rango":"Revisa: diseño 100–110 g"):"Menor a 80 g"}</span></div>`}
+  if(!isNaN(x)){const sm=(CP-x)/D;
+    h+=`<div class="vrow"><span>Margen estático</span><span class="mono"><b>${sm.toFixed(2)} cal</b> (${(CP-x).toFixed(0)} mm)</span></div>`;
+    let cls,txt;
+    if(x>260){cls="bad";txt="No lanzar: el CM está muy atrás"}else if(x>255){cls="warn";txt="Al límite: revisa la masa de la nariz y el sensor"}else if(x>=235){cls="ok";txt="Estable: listo para volar"}else{cls="ok";txt="Muy estable: puede veletear con viento"}
+    if(!isNaN(m)&&m<80){cls="bad";txt="No lanzar: masa menor a 80 g"}
+    h+=`<div class="vbig ${cls}">${txt}</div>`}
+  v.innerHTML=h;
+}
+
+/* ---------- selector de cohete ---------- */
+function renderRockets(){
+  document.getElementById("rocketSeg").innerHTML=ROCKETS.map(r=>`<button data-r="${r.id}" aria-pressed="${r.id===rocket}">${r.name}</button>`).join("");
+  document.querySelectorAll("#rocketSeg button").forEach(b=>b.onclick=()=>{rocket=b.dataset.r;store.set("ecoh:rocket",rocket);state=loadState();renderRockets();render()});
+}
+renderRockets();drawDiagram();selectPart("seg");render();
+})();
+</script>
+</body>
+</html>
