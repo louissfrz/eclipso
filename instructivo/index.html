@@ -191,7 +191,7 @@ footer{margin-top:30px;font-size:12.5px;color:var(--muted);border-top:1px solid 
 <div class="wrap">
   <header class="top">
     <div>
-      <div class="docno">EC-COH-100 · rev. G · armado con Kola Loka · Equipo 2 Fuselaje · Eclipso Cruceros</div>
+      <div class="docno">EC-COH-100 · rev. G · solo Kola Loka y cinta aislante · Equipo 2 Fuselaje · Eclipso Cruceros</div>
       <h1>Armado del cohete EC-COH-100F</h1>
       <p>Instructivo paso a paso para imprimir, pegar y revisar los cohetes de aire comprimido. Marca cada paso al terminarlo: el avance se guarda por cohete en este navegador.</p>
     </div>
@@ -255,9 +255,9 @@ const P={
   finT:{name:"Alerones (×3)",pos:"6",dwg:"EC-COH-106",mass:"2.7 g c/u",join:"U6 · raíz en la canaleta + Kola Loka",fn:"Trapezoidales, 1.2 mm de espesor, impresos planos.",
         d:"M396.2 -14.1 L444.2 -46 L474.2 -46 L474.2 -12.6 L422.6 -12.6 L421.2 -14.1Z",dx:80,dy:-14,key:"fin"},
   finB:{key:"fin",d:"M396.2 7.05 L444.2 23 L474.2 23 L474.2 6.3 L422.6 6.3 L421.2 7.05Z",dx:80,dy:14},
-  tapa:{name:"Tapa retenedora",pos:"2",dwg:"EC-COH-102",mass:"1.7 g con foami",join:"U2 · labio a presión en la nariz + gota de cianoacrilato",fn:"Sujeta el sensor desde arriba. Sale junto con la nariz.",
+  tapa:{name:"Tapa retenedora",pos:"2",dwg:"EC-COH-102",mass:"1.5 g + cinta",join:"U2 · labio a presión en la nariz + gota de cianoacrilato",fn:"Sujeta el sensor desde arriba. Sale junto con la nariz.",
         d:"M114 -19.7 L117 -19.7 L117 19.7 L114 19.7Z",dx:-36,dy:-46,hidden:true},
-  sensor:{name:"Sensor",pos:"S",dwg:"—",mass:"20 g",join:"U4 · foami abajo, tapa arriba (sin pegamento)",fn:"38 × 27 × 26 mm. Va de pie, con el lado de 38 mm a lo largo del cohete.",
+  sensor:{name:"Sensor",pos:"S",dwg:"—",mass:"20 g",join:"U4 · capas de cinta abajo y en la tapa (sin pegamento)",fn:"38 × 27 × 26 mm. Va de pie, con el lado de 38 mm a lo largo del cohete.",
         d:"M117 -13.5 L155 -13.5 L155 13.5 L117 13.5Z",dx:0,dy:-46,hidden:true}
 };
 P.finB.name=P.finT.name;
@@ -318,14 +318,12 @@ F.inspect=()=>svgw(150,`
   ${[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17].map(i=>`<line x1="230" y1="${34+i*5}" x2="264" y2="${34+i*5}" stroke="var(--hatch)" stroke-width=".5"></line>`).join("")}
   ${T(247,142,"pared pareja = OK","f-sm","middle")}${T(60,110,"contraluz","f-sm","middle")}`,"Revisar piezas a contraluz");
 F.ream=()=>svgw(170,`
-  <rect x="40" y="40" width="200" height="14" class="f-part"></rect><rect x="40" y="104" width="200" height="14" class="f-part"></rect>
-  ${T(140,34,"pared de la guía (corte)","f-sm","middle")}
-  <rect x="20" y="58" width="260" height="42" class="f-part2"></rect>
-  <rect x="60" y="54" width="140" height="4" fill="var(--accent)"></rect><rect x="60" y="100" width="140" height="4" fill="var(--accent)"></rect>
-  ${T(150,82,"tubo PVC 1/2&#34; (Ø21.3)","f-txt","middle")}
-  ${T(210,140,"lija 220 enrollada","f-acct")}<path d="M206 136 L190 104" class="f-acc" marker-end="url(#arra)"></path>
-  <path d="M290 60 A 18 22 0 1 1 290 98" class="f-ink" marker-end="url(#arr)"></path>${T(296,48,"gira","f-sm")}
-  ${T(20,160,"Ø22.4 impreso → lijar a Ø22.2","f-sm")}`,"Lijar la guía con el mandril");
+  <rect x="30" y="40" width="70" height="80" class="f-part2"></rect>${T(65,30,"tubo lanzador","f-sm","middle")}
+  <rect x="18" y="96" width="94" height="14" class="f-part"></rect>${T(65,140,"anillo de prueba 105A","f-sm","middle")}
+  <path d="M120 103 L150 103" class="f-ink" marker-end="url(#arr)"></path>
+  ${T(160,60,"¿atora?","f-acct")}${T(160,74,"Hole Horizontal Exp. +0.1","f-sm")}
+  ${T(160,104,"¿baila?","f-acct")}${T(160,118,"Hole Horizontal Exp. −0.05","f-sm")}
+  ${T(160,148,"¿baja solo y sin juego?","f-txt")}${T(160,162,"imprime la cola igual","f-sm")}`,"Ajustar la guía con el anillo de prueba");
 F.sockets=()=>svgw(170,`
   <rect x="30" y="38" width="120" height="12" class="f-part2"></rect><rect x="30" y="112" width="120" height="12" class="f-part2"></rect>
   <rect x="150" y="44" width="140" height="10" class="f-part"></rect><rect x="150" y="108" width="140" height="10" class="f-part"></rect>
@@ -336,7 +334,7 @@ F.sockets=()=>svgw(170,`
   ${T(40,80,"junta apretada, sin juego","f-acct")}${T(40,93,"el pegamento entra solo","f-sm")}
   <path d="M10 81 L28 81" class="f-ink" marker-end="url(#arr)"></path>${T(4,74,"entra","f-sm")}`,"Prueba en seco de un casquillo");
 F.zones=()=>svgw(190,`
-  ${T(10,18,"Lija 120 solo donde va pegamento:","f-sm")}
+  ${T(10,18,"Limpia solo donde va pegamento:","f-sm")}
   <path d="M20 30 L120 30 L150 42 L300 42 L300 56 L150 56 L120 68 L20 68Z" class="f-part"></path>
   <rect x="262" y="42" width="38" height="14" class="f-hatch" stroke="var(--accent)"></rect>${T(281,80,"20 mm","f-acct","middle")}
   ${T(20,84,"Segmento superior (extremo)","f-sm")}
@@ -344,18 +342,18 @@ F.zones=()=>svgw(190,`
   <rect x="252" y="106" width="48" height="14" class="f-hatch" stroke="var(--accent)"></rect>${T(276,138,"25 mm","f-acct","middle")}
   ${T(20,140,"Tubo de presión (extremo delgado)","f-sm")}
   <path d="M30 182 L80 152 L120 152 L120 182Z" class="f-part"></path><rect x="30" y="178" width="90" height="4" class="f-hatch" stroke="var(--accent)"></rect>
-  ${T(130,176,"raíz de cada alerón","f-acct")}`,"Zonas a lijar");
+  ${T(130,176,"raíz de cada alerón","f-acct")}`,"Zonas a limpiar");
 F.fin=()=>svgw(160,`
   <path d="M30 130 L190 130 L190 40 L120 40Z" class="f-part"></path>
   <path d="M30 130 L120 40" stroke="var(--accent)" stroke-width="4" fill="none"></path>
-  ${T(30,30,"borde de ataque:","f-acct")}${T(30,44,"redondear con lija 220","f-sm")}
+  ${T(30,30,"raíz: entra en la canaleta","f-acct")}${T(30,44,"sin forzar","f-sm")}
   <path d="M196 85 L230 85" class="f-ink"></path>${T(234,82,"borde de salida:","f-txt")}${T(234,96,"se deja recto","f-sm")}
   ${T(30,150,"raíz (va dentro de la canaleta)","f-sm")}<path d="M30 134 L190 134" class="f-dash"></path>
   <g transform="translate(250,118)"><path d="M0 0 L40 0 L40 6 L0 6Z" class="f-part"></path><path d="M0 0 A3 3 0 0 0 0 6" stroke="var(--accent)" stroke-width="2" fill="var(--part)"></path>${T(20,22,"corte R0.6","f-sm","middle")}</g>`,"Preparar alerones");
 F.nose=()=>svgw(140,`
   <path d="M20 70 Q 90 20 170 34 L230 34 L230 40 L262 40 L262 100 L230 100 L230 106 L170 106 Q 90 120 20 70Z" class="f-part"></path>
   <rect x="230" y="40" width="32" height="60" class="f-hatch" stroke="var(--accent)"></rect>
-  ${T(246,124,"hombro: lija 220","f-acct","middle")}${T(120,20,"debe deslizar en la bahía sin juego","f-sm","middle")}`,"Ajustar el hombro de la nariz");
+  ${T(246,124,"flojo: 1 vuelta de cinta","f-acct","middle")}${T(120,20,"debe deslizar en la bahía sin juego","f-sm","middle")}`,"Ajustar el hombro de la nariz");
 F.ports=()=>svgw(140,`
   <rect x="30" y="35" width="200" height="70" class="f-part"></rect>
   ${[90,150].map(x=>`<circle cx="${x}" cy="70" r="4" fill="var(--panel)" stroke="var(--accent)" stroke-width="1.5"></circle>`).join("")}
@@ -366,20 +364,18 @@ F.ipa=()=>svgw(120,`
   <rect x="40" y="20" width="44" height="80" rx="6" class="f-part2"></rect><rect x="52" y="8" width="20" height="14" class="f-part"></rect>
   ${T(62,66,"IPA","f-txt","middle")}
   <path d="M110 60 Q 150 40 190 60 T 270 60" class="f-acc"></path>${T(110,96,"limpia y deja evaporar 5 min;","f-sm")}${T(110,110,"luego ya no lo toques","f-sm")}`,"Desengrasar");
-F.mandrel=()=>svgw(210,`
-  <rect x="110" y="182" width="100" height="18" class="f-part2"></rect>${T(160,195,"tornillo / base","f-sm","middle")}
-  <rect x="150" y="20" width="20" height="162" class="f-part2"></rect>
-  <rect x="148" y="20" width="24" height="162" fill="none" stroke="var(--accent)" stroke-dasharray="3 2"></rect>
-  ${T(180,30,"PVC 1/2&#34; de 50 cm","f-txt")}${T(180,46,"forrado con bolsa","f-acct")}${T(180,59,"o cinta canela","f-acct")}
-  <path d="M138 70 L182 70 L182 182 L138 182Z" fill="var(--part)" stroke="var(--ink)" opacity=".85"></path>
-  ${T(130,110,"cuerpo","f-sm","end")}${T(130,122,"vertical","f-sm","end")}
-  <path d="M90 40 L90 66" class="f-ink" marker-end="url(#arr)"></path>${T(40,34,"se desliza","f-sm")}`,"Mandril vertical");
+F.mandrel=()=>svgw(150,`
+  <rect x="10" y="118" width="300" height="6" class="f-part2"></rect>${T(160,142,"rueda el cuerpo armado en seco: no debe cabecear","f-sm","middle")}
+  <path d="M30 80 L130 80 L160 90 L280 90 L280 106 L160 106 L130 116 L30 116Z" class="f-part"></path>
+  <path d="M160 86 L180 86 M160 110 L180 110" stroke="var(--accent)" stroke-width="2"></path><path d="M270 86 L290 86 M270 110 L290 110" stroke="var(--accent)" stroke-width="2"></path>
+  ${T(170,70,"casquillos = alineación","f-acct","middle")}
+  <path d="M60 40 A 30 12 0 1 1 100 40" class="f-ink" marker-end="url(#arr)"></path>`,"Armar en seco y revisar que esté recto");
 F.ca=()=>svgw(140,`
   <path d="M60 30 L84 30 L92 44 L92 120 L52 120 L52 44Z" class="f-part2"></path><path d="M66 12 L78 12 L84 30 L60 30Z" class="f-part"></path>
   ${T(72,86,"Kola","f-txt","middle")}${T(72,100,"Loka","f-txt","middle")}
   <path d="M150 40 C 150 54, 160 62, 150 70 C 140 62, 150 54, 150 40Z" fill="var(--accent)"></path>
   <path d="M200 40 C 200 54, 210 62, 200 70 C 190 62, 200 54, 200 40Z" fill="var(--accent)" opacity=".6"></path>
-  ${T(140,96,"pocas gotas","f-acct")}${T(140,112,"guantes de nitrilo · ventila","f-sm")}${T(140,126,"nada de algodón","f-sm")}`,"Preparar el cianoacrilato");
+  ${T(140,96,"pocas gotas","f-acct")}${T(140,112,"ventila · cuidado con la piel","f-sm")}${T(140,126,"nada de algodón","f-sm")}`,"Preparar el cianoacrilato");
 F.seal=()=>svgw(140,`
   <rect x="20" y="52" width="140" height="36" class="f-part"></rect><rect x="150" y="46" width="150" height="48" class="f-part2"></rect>
   <rect x="134" y="42" width="40" height="56" fill="var(--ink)" opacity=".82"></rect>
@@ -424,16 +420,18 @@ F.cure=()=>svgw(130,`
   <circle cx="70" cy="65" r="44" class="f-part"></circle><path d="M70 65 L70 32 M70 65 L96 80" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"></path>
   ${T(70,126,"24 h","f-acct","middle")}
   <rect x="190" y="20" width="18" height="80" rx="9" class="f-part"></rect><circle cx="199" cy="108" r="14" fill="var(--accent)"></circle><rect x="195" y="50" width="8" height="58" fill="var(--accent)"></rect>
-  ${T(220,60,"≥ 20 °C","f-txt")}${T(220,76,"vertical,","f-sm")}${T(220,89,"en el mandril","f-sm")}`,"Curado");
+  ${T(220,60,"≥ 20 °C","f-txt")}${T(220,76,"parado sobre","f-sm")}${T(220,89,"su base","f-sm")}`,"Curado");
 F.foam=()=>svgw(130,`
-  <circle cx="80" cy="62" r="46" fill="var(--warn-soft)" stroke="var(--warn)"></circle>${T(80,66,"Ø38","f-txt","middle")}${T(80,124,"piso de la bahía","f-sm","middle")}
-  <circle cx="220" cy="62" r="36" fill="var(--warn-soft)" stroke="var(--warn)"></circle>${T(220,66,"Ø30","f-txt","middle")}${T(220,124,"cara plana de la tapa","f-sm","middle")}`,"Discos de foami");
+  <rect x="40" y="40" width="100" height="6" fill="var(--ink)" opacity=".85"></rect><rect x="40" y="47" width="100" height="6" fill="var(--ink)" opacity=".7"></rect><rect x="40" y="54" width="100" height="6" fill="var(--ink)" opacity=".85"></rect><rect x="40" y="61" width="100" height="6" fill="var(--ink)" opacity=".7"></rect>
+  ${T(90,90,"3–4 capas","f-acct","middle")}${T(90,106,"piso de la bahía","f-sm","middle")}
+  <rect x="190" y="47" width="90" height="6" fill="var(--ink)" opacity=".85"></rect><rect x="190" y="54" width="90" height="6" fill="var(--ink)" opacity=".7"></rect><rect x="190" y="61" width="90" height="6" fill="var(--ink)" opacity=".85"></rect>
+  ${T(235,90,"2–3 capas","f-acct","middle")}${T(235,106,"cara plana de la tapa","f-sm","middle")}`,"Acolchado con cinta aislante");
 F.tapa=()=>svgw(160,`
   <path d="M10 80 Q 80 30 160 40 L200 40 L200 46 L232 46 L232 114 L200 114 L200 120 L160 120 Q 80 130 10 80Z" class="f-part"></path>
   <rect x="212" y="52" width="10" height="56" class="f-part2"></rect><rect x="222" y="44" width="4" height="72" class="f-part2"></rect>
   <rect x="226" y="54" width="4" height="52" fill="var(--warn-soft)" stroke="var(--warn)"></rect>
   <circle cx="214" cy="50" r="3.5" fill="var(--accent)"></circle>
-  ${T(240,58,"tapa (labio dentro","f-sm")}${T(240,70,"del hombro)","f-sm")}${T(240,100,"foami Ø30","f-sm")}${T(150,150,"1 gota de cianoacrilato","f-acct","middle")}<path d="M180 140 L212 54" class="f-acc"></path>`,"U2: tapa en la nariz");
+  ${T(240,58,"tapa (labio dentro","f-sm")}${T(240,70,"del hombro)","f-sm")}${T(240,100,"capas de cinta","f-sm")}${T(150,150,"1 gota de cianoacrilato","f-acct","middle")}<path d="M180 140 L212 54" class="f-acc"></path>`,"U2: tapa en la nariz");
 F.sensor=()=>svgw(190,`
   <rect x="40" y="20" width="16" height="160" class="f-part"></rect><rect x="200" y="20" width="16" height="160" class="f-part"></rect>
   <rect x="56" y="160" width="144" height="10" class="f-part2"></rect>${T(128,186,"piso de la bahía","f-sm","middle")}
@@ -441,7 +439,7 @@ F.sensor=()=>svgw(190,`
   <rect x="70" y="40" width="116" height="113" class="f-part2"></rect>${T(128,96,"sensor","f-txt","middle")}${T(128,110,"38 mm de alto","f-sm","middle")}
   <path d="M62 14 L62 156 L120 156" stroke="var(--accent)" stroke-width="3" fill="none"></path>
   <path d="M62 14 L80 14" stroke="var(--accent)" stroke-width="3"></path>
-  ${T(226,30,"listón para jalarlo","f-acct")}${T(226,44,"(queda doblado","f-sm")}${T(226,56,"bajo la nariz)","f-sm")}
+  ${T(226,30,"jaladera de cinta","f-acct")}${T(226,44,"(queda doblado","f-sm")}${T(226,56,"bajo la nariz)","f-sm")}
   <circle cx="176" cy="52" r="5" fill="var(--ok)"></circle>${T(226,90,"enciéndelo antes","f-txt")}${T(226,104,"de meterlo","f-sm")}`,"U4: sensor en la bahía");
 F.close=()=>svgw(120,`
   <path d="M10 60 Q 60 25 120 30 L150 30 L150 90 L120 90 Q 60 95 10 60Z" class="f-part"></path>
@@ -464,8 +462,8 @@ F.balance=()=>svgw(150,`
 F.mandrelOut=()=>svgw(120,`
   <rect x="20" y="50" width="280" height="20" class="f-part2"></rect>
   <path d="M60 50 L60 70 M100 50 L100 70" stroke="var(--accent)" stroke-dasharray="2 2"></path>
-  <path d="M180 30 A 20 8 0 1 1 200 30" class="f-ink" marker-end="url(#arr)"></path>${T(210,28,"gira y saca","f-sm")}
-  ${T(20,96,"¿pegamento dentro de la guía?","f-sm")}${T(20,109,"líjalo hasta que deslice","f-sm")}`,"Sacar del mandril");
+  ${T(210,28,"prueba en el tubo lanzador","f-sm")}
+  ${T(20,96,"¿pegamento dentro de la guía?","f-sm")}${T(20,109,"ráspalo hasta que deslice","f-sm")}`,"Sacar del mandril");
 
 /* ---------- pasos ---------- */
 const PH=[
@@ -480,64 +478,55 @@ const PH=[
 ];
 const STEPS={
 "preparacion":[
- {id:"p-insp",t:"Revisa cada pieza a contraluz",f:"inspect",b:`<p>Quita el brim con el cutter. Mira cada pieza contra una lámpara.</p><ul><li>Piezas de presión (3, 4 y 5) con <b>capas separadas, huecos o grietas: se descartan</b>, no se reparan.</li><li>Pésala: debe quedar dentro de ±10 % de su masa de plano (nariz 11.6 g · segmento 34.5 g · tubo 15.0 g · cola 13.1 g · alerón 2.7 g).</li></ul>`},
- {id:"p-guia",t:"Ajusta la guía de la cola",f:"ream",b:`<ol><li>Prueba primero el <b>anillo de prueba (105A)</b> en el tubo lanzador: debe bajar por su propio peso, sin bambolearse.</li><li>Enrolla lija 220 en el tubo PVC de 1/2" y lija el interior de la guía girando, sin cargar hacia un lado.</li><li>Prueba seguido. Para cuando la cola baje sola y no tenga juego lateral.</li></ol><div class="note">Si el anillo ya quedó flojo antes de lijar, no imprimas la cola así: reduce la compensación de agujeros en Cura y vuelve a imprimir el anillo.</div>`},
- {id:"p-seco",t:"Prueba los casquillos en seco",f:"sockets",b:`<ul><li><b>U3:</b> el extremo del segmento superior entra en el casquillo del tubo de presión.</li><li><b>U5:</b> el extremo delgado del tubo de presión entra en la cola hasta el tope.</li></ul><p>Deben entrar a mano, sin forzar y <b>sin juego visible</b>: el Kola Loka se mete solo en juntas apretadas, pero no rellena huecos. Si entran forzados, lija el interior del casquillo solo lo necesario.</p><div class="note">El extremo del tubo que imprimiste sobre la cama puede tener "pata de elefante". Pásale lija 220 a los primeros 1–2 mm si no entra en la cola.</div>`},
- {id:"p-lija",t:"Lija las zonas de pegado",f:"zones",b:`<p>Con grano 120, hasta que queden opacas y rayadas:</p><ul><li>20 mm del extremo del segmento superior (U3).</li><li>Últimos 25 mm del tubo de presión (U5).</li><li>La raíz de cada alerón (U6).</li></ul>`},
- {id:"p-aler",t:"Prepara los alerones",f:"fin",b:`<ul><li>Limpia las 3 canaletas de la cola con la punta del cutter.</li><li>Cada alerón debe entrar en su canaleta <b>sin forzar</b>.</li><li>Redondea el borde de ataque (el inclinado) con lija 220. El borde de salida se deja recto.</li></ul>`},
- {id:"p-nariz",t:"Ajusta la nariz",f:"nose",b:`<p>Lija el hombro con 220 hasta que entre en la bahía deslizando, sin juego. Es la puerta del sensor: la vas a abrir muchas veces.</p>`},
- {id:"p-puertos",t:"Repasa los 3 puertos estáticos",f:"ports",b:`<p>Pasa la broca de 2 mm <b>girándola a mano</b> por cada puerto de la bahía. Por ahí el sensor lee la presión del aire; deben quedar limpios.</p>`},
- {id:"p-ipa",t:"Desengrasa",f:"ipa",timer:{s:300,l:"Secado"},b:`<p>Limpia todas las zonas que vas a pegar con alcohol isopropílico, o con agua y jabón, y deja secar bien 5 min. Desde aquí no las toques con los dedos.</p><div class="note bad">No uses acetona: debilita el PLA.</div>`}
+ {id:"p-insp",t:"Revisa cada pieza a contraluz",f:"inspect",b:`<p>Quita el brim despegándolo con la uña. Mira cada pieza contra una lámpara.</p><ul><li>Piezas de presión (3, 4 y 5) con <b>capas separadas, huecos o grietas: se descartan</b>, no se reparan.</li><li>En el laboratorio, pésalas: deben quedar cerca de su masa de plano (nariz 11.6 g · segmento 34.5 g · tubo 15.0 g · cola 13.1 g · alerón 2.7 g).</li></ul>`},
+ {id:"p-guia",t:"Ajusta la guía de la cola desde Cura",f:"ream",b:`<p>Sin lija, el ajuste de la guía se hace en la impresión:</p><ol><li>Imprime el <b>anillo de prueba (105A)</b> y pruébalo en el tubo lanzador. Debe bajar por su propio peso, sin bambolearse.</li><li>Si <b>atora</b>: en Cura sube <i>Hole Horizontal Expansion</i> a +0.1 mm y vuelve a imprimir el anillo.</li><li>Si <b>baila</b>: bájalo a −0.05 mm y vuelve a imprimir.</li><li>Cuando el anillo quede bien, imprime la cola con <b>ese mismo ajuste</b>.</li></ol><div class="note">El anillo tarda 25 min: vale la pena repetirlo las veces que haga falta antes de imprimir la cola (2 h).</div>`},
+ {id:"p-seco",t:"Prueba los casquillos en seco",f:"sockets",b:`<ul><li><b>U3:</b> el extremo del segmento superior entra en el casquillo del tubo de presión.</li><li><b>U5:</b> el extremo delgado del tubo de presión entra en la cola hasta el tope.</li></ul><p>Deben entrar a mano, sin forzar y <b>sin juego visible</b>: el Kola Loka se mete solo en juntas apretadas.</p><ul><li><b>Si entra forzado:</b> reimprime el casquillo con <i>Hole Horizontal Expansion</i> +0.1 mm.</li><li><b>Si queda flojo:</b> no pasa nada; la cinta aislante de U3 y U5 sella, y el Kola Loka sigue pegando.</li></ul>`},
+ {id:"p-lija",t:"Limpia las zonas de pegado",f:"zones",b:`<p>Sin lija, lo importante es que estén <b>limpias y sin grasa</b>. Lava con agua y jabón, o solo agua, y deja secar bien:</p><ul><li>20 mm del extremo del segmento superior (U3).</li><li>Últimos 25 mm del tubo de presión (U5).</li><li>La raíz de cada alerón (U6).</li></ul><p>Desde aquí no las toques con los dedos.</p>`},
+ {id:"p-aler",t:"Prueba los alerones",f:"fin",b:`<ul><li>Cada alerón debe entrar en su canaleta <b>sin forzar</b>. Si una canaleta tiene un hilo de plástico, sácalo con la orilla de otro alerón.</li><li>Los rieles ya fijan los 120°: no hace falta plantilla.</li><li>Sin lija, el borde de ataque se queda como sale. El efecto en el vuelo es mínimo.</li></ul>`},
+ {id:"p-nariz",t:"Ajusta la nariz",f:"nose",b:`<p>El hombro debe entrar en la bahía deslizando, sin juego. Es la puerta del sensor: la vas a abrir muchas veces.</p><ul><li><b>Si queda flojo:</b> da una vuelta de cinta aislante alrededor del hombro.</li><li><b>Si no entra:</b> reimprime la nariz con <i>Horizontal Expansion</i> −0.1 mm.</li></ul>`},
+ {id:"p-puertos",t:"Revisa los 3 puertos estáticos",f:"ports",b:`<p>Mira que los 3 agujeros de la bahía estén abiertos. Si alguno tiene un hilo de plástico, ábrelo con un alfiler o un clip. Por ahí el sensor lee la presión del aire.</p>`},
+ {id:"p-ipa",t:"Deja secar",f:"ipa",timer:{s:300,l:"Secado"},b:`<p>Si lavaste las piezas, deja que se sequen por completo antes de pegar: el agua atrapada en una junta debilita el Kola Loka.</p>`}
 ],
 "dia-1":[
- {id:"d1-mandril",t:"Prepara el mandril",f:"mandrel",b:`<p>Envuelve el tubo PVC de 1/2" (50 cm) con una bolsa de plástico o cinta canela: el Kola Loka no pega en la bolsa. Sujétalo <b>vertical</b> en un tornillo de banco o una base.</p><p>El mandril mantiene la cola, el tubo y el segmento en línea mientras pegas.</p>`},
- {id:"d1-ca",t:"Prepara el Kola Loka",f:"ca",b:`<ul><li>Guantes de nitrilo y un lugar ventilado.</li><li>Trabaja sobre plástico o papel encerado.</li><li>Usa <b>pocas gotas</b>: si se acumula, tarda en secar, se pone blanco y queda quebradizo.</li></ul><div class="note bad">No limpies con algodón ni con papel de algodón: el cianoacrilato reacciona con el algodón, se calienta mucho y puede humear.</div>`},
- {id:"d1-u5",t:"U5 · Tubo de presión en la cola",tag:"U5",f:"u5",timer:{s:60,l:"Entre aplicaciones"},b:`<ol><li>Arma <b>en seco</b>: mete el tubo girando hasta que toque el tope.</li><li>Desliza el conjunto en el mandril, con la base de la cola abajo.</li><li>Deja caer 3–4 gotas alrededor de la orilla del casquillo (arriba). Se meten solas en la junta.</li><li>Espera 1 min y repite una vez.</li></ol><div class="note">Si escurre por fuera, déjalo secar y líjalo después.</div>`},
- {id:"d1-u3",t:"U3 · Segmento superior sobre el tubo",tag:"U3",f:"u3",timer:{s:60,l:"Entre aplicaciones"},b:`<ol><li>En seco, mete el extremo del segmento superior en el casquillo del tubo, girando hasta el fondo, con la bahía hacia arriba.</li><li>Míralo de frente y de lado: debe verse recto sobre el mandril.</li><li>3–4 gotas alrededor de la orilla del casquillo; espera 1 min y repite una vez.</li></ol>`},
- {id:"d1-u6",t:"U6 · Alerones",tag:"U6",f:"u6",b:`<ol><li>Mete los 3 alerones <b>en seco</b>, con el borde inclinado hacia arriba y el borde de salida <b>al ras de la base</b>. Revisa desde abajo que queden a 120° y derechos.</li><li>Saca el cuerpo del mandril y acuéstalo con un alerón hacia arriba.</li><li>Pasa una línea fina de Kola Loka por ambos lados de la raíz, sobre los rieles. Se mete en la canaleta.</li><li>Espera 1 min, gira el cohete y repite con los otros dos.</li><li>Regresa el cuerpo al mandril.</li></ol><div class="note">No hagas cordones gruesos solo de Kola Loka: no seca bien y queda quebradizo. Opcional: espolvorea bicarbonato de sodio sobre una línea fresca para formar un cordón duro de refuerzo.</div>`},
+ {id:"d1-mandril",t:"Arma el cuerpo en seco",f:"mandrel",b:`<p>Sin mandril, la alineación la dan los casquillos (20 y 25 mm de largo):</p><ol><li>Mete el tubo de presión en la cola hasta el tope, y el segmento superior en el tubo hasta el fondo.</li><li><b>Rueda el cuerpo sobre una mesa plana</b>: no debe cabecear. Si cabecea, gira un poco una pieza respecto a la otra y vuelve a probar.</li><li>Párado sobre su base, apóyalo contra la pared para pegar.</li></ol>`},
+ {id:"d1-ca",t:"Prepara el Kola Loka",f:"ca",b:`<ul><li>Lugar ventilado. Si no tienen guantes, trabaja con cuidado: pega la piel en segundos (sale con agua tibia y jabón, sin jalar).</li><li>Trabaja sobre una bolsa o un plástico.</li><li>Usa <b>pocas gotas</b>: si se acumula, tarda en secar, se pone blanco y queda quebradizo.</li></ul><div class="note bad">No limpies con algodón ni con papel de algodón: el cianoacrilato reacciona con el algodón, se calienta mucho y puede humear.</div>`},
+ {id:"d1-u5",t:"U5 · Tubo de presión en la cola",tag:"U5",f:"u5",timer:{s:60,l:"Entre aplicaciones"},b:`<ol><li>Con el cuerpo armado en seco y parado sobre su base, deja caer 3–4 gotas alrededor de la orilla del casquillo de la cola (arriba). Se meten solas en la junta.</li><li>Espera 1 min y repite una vez.</li></ol><div class="note">Cuida que no escurra hacia la base: una gota dentro de la guía la puede atorar en el tubo lanzador.</div>`},
+ {id:"d1-u3",t:"U3 · Segmento superior sobre el tubo",tag:"U3",f:"u3",timer:{s:60,l:"Entre aplicaciones"},b:`<ol><li>Vuelve a rodar el cuerpo para confirmar que esté recto.</li><li>3–4 gotas alrededor de la orilla del casquillo del tubo (arriba); espera 1 min y repite una vez.</li></ol>`},
+ {id:"d1-u6",t:"U6 · Alerones",tag:"U6",f:"u6",b:`<ol><li>Mete los 3 alerones <b>en seco</b>, con el borde inclinado hacia arriba y el borde de salida <b>al ras de la base</b>.</li><li>Acuesta el cohete con un alerón hacia arriba.</li><li>Pasa una línea fina de Kola Loka por ambos lados de la raíz, sobre los rieles. Se mete en la canaleta.</li><li>Espera 1 min, gira el cohete y repite con los otros dos.</li></ol><div class="note">No hagas cordones gruesos de Kola Loka: no seca bien y queda quebradizo.</div>`},
  {id:"d1-sello",t:"Sella U3 y U5 con cinta aislante",f:"seal",b:`<p>Después de 1 h, cubre cada junta con <b>1½ vueltas de cinta aislante bien estirada</b>, sin arrugas. Termina la vuelta con la punta hacia la cola, para que el aire no la levante en vuelo.</p><p>El Kola Loka da la resistencia; la cinta es el sello contra fugas.</p>`},
  {id:"d1-cura",t:"Deja curar 24 h",f:"cure",cure:true,b:`<p>El Kola Loka seca en segundos, pero llega a su resistencia completa en un día. Déjalo vertical, a 20 °C o más.</p><div class="note bad">No metas presión a este cohete antes de que termine el curado.</div>`}
 ],
 "dia-2":[
- {id:"d2-saca",t:"Saca el cuerpo del mandril",f:"mandrelOut",b:`<p>Gíralo y sácalo. Revisa que no haya pegamento dentro de la guía; si lo hay, líjalo con el mandril y lija 220 hasta que vuelva a deslizar sobre el tubo lanzador.</p>`},
- {id:"d2-foami",t:"Corta los discos de foami",f:"foam",b:`<p>Foami liso de 2 mm: un disco de <b>Ø38</b> para el piso de la bahía y uno de <b>Ø30</b> para la tapa.</p>`},
- {id:"d2-tapa",t:"U2 · Tapa en la nariz",tag:"U2",f:"tapa",timer:{s:30,l:"Presionar"},b:`<ol><li>Pega el disco de Ø30 en la cara plana de la tapa con Kola Loka y presiona 30 s.</li><li>Mete el labio de la tapa a presión en el hombro de la nariz, con el foami del lado que mira al sensor.</li><li>Fija con una gota de Kola Loka. La tapa sale junto con la nariz.</li></ol><div class="note">Hazlo sin el sensor adentro y deja ventilar 10 min antes de meterlo: los vapores del cianoacrilato pueden afectar sus puertos.</div>`},
- {id:"d2-sensor",t:"U4 · Sensor",tag:"U4",f:"sensor",b:`<ol><li>Coloca el disco de Ø38 en el piso de la bahía.</li><li>Pon una tira de listón que pase por debajo del sensor y suba por un costado: así lo sacas jalándola.</li><li><b>Enciende o arma el sensor</b> y mételo de pie, con su lado de 38 mm a lo largo del cohete.</li></ol>`},
- {id:"d2-cierra",t:"U1 · Cierra con la nariz",tag:"U1",f:"close",b:`<p>Desliza el hombro en la bahía hasta el tope, con la punta del listón doblada bajo la nariz. Sacude el cohete: el sensor no debe sonar. Si suena, agrega otro disco de foami en la tapa.</p>`},
+ {id:"d2-saca",t:"Revisa la guía",f:"mandrelOut",b:`<p>Prueba el cuerpo en el tubo lanzador. Si alguna gota quedó dentro de la guía y la atora, ráspala con la orilla de un alerón de repuesto hasta que vuelva a deslizar.</p>`},
+ {id:"d2-foami",t:"Prepara el acolchado con cinta",f:"foam",b:`<p>Sin foami, la cinta aislante hace de acolchado:</p><ul><li><b>Piso de la bahía:</b> pega 3–4 capas de cinta encimadas en el piso.</li><li><b>Tapa:</b> pega 2–3 capas de cinta en su cara plana.</li></ul><p>Si al final el sensor queda flojo, agrega capas en la tapa.</p>`},
+ {id:"d2-tapa",t:"U2 · Tapa en la nariz",tag:"U2",f:"tapa",timer:{s:30,l:"Presionar"},b:`<ol><li>Mete el labio de la tapa a presión en el hombro de la nariz, con las capas de cinta del lado que mira al sensor.</li><li>Fija con una gota de Kola Loka y presiona 30 s. La tapa sale junto con la nariz.</li></ol><div class="note">Hazlo sin el sensor adentro y deja ventilar 10 min antes de meterlo: los vapores del cianoacrilato pueden afectar sus puertos.</div>`},
+ {id:"d2-sensor",t:"U4 · Sensor",tag:"U4",f:"sensor",b:`<ol><li>Haz una <b>jaladera de cinta</b>: una tira de unos 20 cm doblada sobre sí misma (pegamento con pegamento) para que no pegue.</li><li>Ponla en el piso de la bahía, con una punta subiendo por un costado.</li><li><b>Enciende o arma el sensor</b> y mételo de pie sobre la jaladera, con su lado de 38 mm a lo largo del cohete.</li></ol>`},
+ {id:"d2-cierra",t:"U1 · Cierra con la nariz",tag:"U1",f:"close",b:`<p>Desliza el hombro en la bahía hasta el tope, con la punta de la jaladera doblada bajo la nariz. Sacude el cohete: el sensor no debe sonar. Si suena, agrega capas de cinta en la tapa.</p>`},
  {id:"d2-cinta",t:"Fija la nariz con cinta",f:"tape",b:`<p>Dos tiras de cinta aislante de unos 6 cm sobre la junta, una enfrente de la otra, a lo largo del cohete y lo más lisas posible. Dobla la punta de cada tira para despegarla fácil.</p>`}
 ]};
 const REVIEW=[
- ["r-masa","<b>Masa:</b> entre 100 y 110 g con sensor (mínimo del reglamento: 80 g)."],
- ["r-cg","<b>Punto de equilibrio:</b> entre 235 y 255 mm desde la punta (usa la calculadora)."],
+ ["r-masa","<b>Masa</b> (báscula del laboratorio): entre 100 y 112 g con sensor (mínimo del reglamento: 80 g)."],
+ ["r-cg","<b>Punto de equilibrio:</b> apóyalo sobre la orilla de una mesa o un lápiz y mide con la regla: entre 235 y 255 mm desde la punta (usa la calculadora)."],
  ["r-recto","<b>Recto:</b> al rodarlo sobre una mesa plana no cabecea."],
  ["r-aler","<b>Alerones:</b> firmes, sin juego, a 120° y sin torcerse."],
  ["r-guia","<b>Guía:</b> desliza sobre el tubo lanzador en todo su largo, sin juego lateral."],
  ["r-union","<b>U3 y U5:</b> cinta de sellado lisa, sin arrugas ni orillas levantadas."],
  ["r-puertos","<b>Puertos estáticos:</b> los 3 abiertos, sin cinta ni pegamento encima."],
  ["r-sensor","<b>Sensor:</b> encendido y sin juego."],
- ["r-nariz","<b>Nariz:</b> asentada hasta el tope, cinta lisa."],
+ ["r-nariz","<b>Nariz:</b> asentada hasta el tope, cinta lisa, jaladera doblada adentro."],
  ["r-id","<b>Identificación:</b> número de cohete y masa escritos con plumón."]
 ];
 const MATS=[
  // [id, estado, material, qué usar, si no hay, cantidad para el lote, para qué]
- ["m-ca","tienen","Cianoacrilato","Krazy Kola Loka","Resistol 911","2–3 tubos","U2, U3, U5, U6 y foami"],
- ["m-cinta","tienen","Cinta aislante","La de vinil que tienen (19 mm)","3M Temflex 1700","1 rollo","Sellar U3 y U5; fijar la nariz (U1)"],
- ["m-pla","tienen","Filamento PLA","Ender PLA 1.75 mm","Cualquier PLA 1.75","≈ 550 g del 1.8 kg que tienen","Todas las piezas"],
- ["m-l120","conseguir","Lija de agua grano 120","Truper LIAG-120","Grano 100–150","1–2 hojas","Zonas de pegado y raíz de alerones"],
- ["m-l220","conseguir","Lija de agua grano 220","Truper LIAG-220","Grano 180–240","1–2 hojas","Guía Ø22.2, hombro de la nariz, borde de ataque"],
- ["m-pvc","conseguir","Mandril","Tubo PVC hidráulico céd. 40 de 1/2\" (Ø ≈ 21.3), 50 cm","Un tramo del tubo lanzador","1 tramo","Lijar la guía y pegar el cuerpo recto"],
- ["m-bolsa","conseguir","Bolsa de plástico","Bolsa delgada de supermercado","Cinta canela","1","Forrar el mandril (el Kola Loka no pega en ella)"],
- ["m-foami","conseguir","Foami liso de 2 mm","Hoja tamaño carta","Cualquier foami liso de 2 mm","1 hoja","Discos Ø38 y Ø30 del sensor"],
- ["m-guantes","conseguir","Guantes de nitrilo","Caja chica","Guantes de látex","1 par por persona","El cianoacrilato pega la piel"],
- ["m-cutter","conseguir","Cutter","Cutter con navaja nueva","Navaja de modelismo","1","Brim, rebabas y canaletas"],
- ["m-liston","conseguir","Listón delgado","Listón de 3–6 mm","Cinta de tela o hilo grueso","20 cm por cohete","Sacar el sensor"],
- ["m-broca","conseguir","Broca de 2 mm","Girada a mano","Broca de 5/64\" o un clip enderezado","1","Limpiar los puertos estáticos"],
- ["m-bascula","conseguir","Báscula","Digital de 0.1 g","La del laboratorio o una de cocina de 1 g","1","Revisión final (≥ 80 g)"],
- ["m-lentes","conseguir","Lentes de seguridad","De policarbonato","Careta","1 por persona","Prueba estática y lanzamientos"],
- ["m-limpia","opcional","Limpiador","Alcohol isopropílico","Agua y jabón, y secar bien","Poco","Desengrasar antes de pegar"],
- ["m-bic","opcional","Bicarbonato de sodio","El de la cocina","—","Una pizca por cohete","Cordón duro en la raíz de los alerones"],
- ["m-jabon","opcional","Agua con jabón","Atomizador o brocha","—","Poco","Buscar fugas a 20–30 PSI"],
- ["m-plumon","opcional","Plumón permanente y vernier","—","Regla","1","Marcar el cohete y medir"]
+ ["m-ca","tienen","Cianoacrilato","Krazy Kola Loka","Resistol 911","2–3 tubos","Todas las uniones pegadas (U2, U3, U5, U6)"],
+ ["m-cinta","tienen","Cinta aislante","La de vinil (19 mm)","3M Temflex 1700","1 rollo","Sellar U3 y U5, fijar la nariz, acolchar el sensor, jaladera"],
+ ["m-pla","tienen","Filamento PLA","Ender PLA 1.75 mm","Cualquier PLA 1.75","≈ 550 g","Todas las piezas"],
+ ["m-tubo","lab","Tubo lanzador","El del lanzador del curso","—","—","Probar el anillo de prueba y la guía"],
+ ["m-bascula","lab","Báscula","La del laboratorio","—","—","Revisión final (mínimo 80 g)"],
+ ["m-lentes","lab","Lentes de seguridad","Los del laboratorio","Careta","1 por persona","Prueba estática y lanzamientos: no se omiten"],
+ ["m-regla","casa","Regla o cinta métrica","Cualquiera","—","1","Punto de equilibrio"],
+ ["m-jabon","casa","Agua y jabón","De la cocina","Solo agua","Poco","Limpiar zonas de pegado y buscar fugas"],
+ ["m-alfiler","casa","Alfiler o clip","Cualquiera","—","1","Abrir los puertos si tienen un hilo"]
 ];
 const PRINT=[
  ["105A","Anillo de prueba","100 %","1.2","0.2","Brim 5","50 %","1","~25 min","1.7 g","Base sobre la cama"],
@@ -575,14 +564,20 @@ function render(){
   PH.forEach(ph=>{
     h+=`<section id="sec-${ph.id}" aria-labelledby="h-${ph.id}">`;
     if(ph.id==="materiales"){
-      const ST={tienen:["ok","Ya lo tienen"],conseguir:["warn","Conseguir"],opcional:["","Opcional"]};
-      const cnt=k=>MATS.filter(r=>r[1]===k).length;
-      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Materiales</h2><p>Lista para el lote completo (3 cohetes de vuelo, 1 cuerpo de prueba estática y repuestos), con lo que ya tienen. Ya no hace falta epóxico: se pega con Kola Loka y se sella con cinta aislante.</p></div><span class="pill warn">${cnt("conseguir")} por conseguir</span></div>`;
-      ["tienen","conseguir","opcional"].forEach(k=>{
-        h+=`<div class="tablebox"><h3>${{tienen:"Ya lo tienen",conseguir:"Por conseguir",opcional:"Opcional"}[k]} <span class="pill ${ST[k][0]}">${cnt(k)}</span></h3><table><thead><tr><th></th><th>Material</th><th>Qué usar</th><th>Si no hay</th><th>Cantidad</th><th>Para qué</th></tr></thead><tbody>`;
-        MATS.filter(r=>r[1]===k).forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" aria-label="Listo: ${esc(r[2])}" ${lot.done[r[0]]||k==="tienen"?"checked":""}></td><td><b>${esc(r[2])}</b></td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td class="n">${esc(r[5])}</td><td>${esc(r[6])}</td></tr>`});
+      const G={tienen:["ok","Lo que usan","Lo único que hace falta para armar"],lab:["","Del laboratorio","Se usan en las pruebas y el lanzamiento"],casa:["","De la casa","Cosas comunes que ayudan"]};
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Materiales</h2><p>El armado se hace solo con <b>Kola Loka y cinta aislante</b>. Lo que antes hacía la lija se resuelve en Cura, y la cinta reemplaza al foami y al listón. No hay nada más que comprar.</p></div><span class="pill ok">Nada por comprar</span></div>`;
+      ["tienen","lab","casa"].forEach(k=>{
+        h+=`<div class="tablebox"><h3>${G[k][1]} <span style="font:400 13px var(--body);color:var(--muted)">· ${G[k][2]}</span></h3><table><thead><tr><th></th><th>Material</th><th>Qué usar</th><th>Cantidad</th><th>Para qué</th></tr></thead><tbody>`;
+        MATS.filter(r=>r[1]===k).forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" aria-label="Listo: ${esc(r[2])}" ${lot.done[r[0]]||k==="tienen"?"checked":""}></td><td><b>${esc(r[2])}</b></td><td>${esc(r[3])}</td><td class="n">${esc(r[5])}</td><td>${esc(r[6])}</td></tr>`});
         h+=`</tbody></table></div>`;});
-      h+=`<div class="note">Ya no se usan: epóxico, masking tape ni abatelenguas. El Kola Loka seca en segundos, así que no hace falta sujetar los alerones mientras cura.</div>`;
+      h+=`<div class="tablebox"><h3>Qué reemplaza a cada cosa</h3><table><thead><tr><th>Antes</th><th>Ahora</th></tr></thead><tbody>
+        <tr><td>Epóxico</td><td>Kola Loka + cinta aislante como sello en U3 y U5</td></tr>
+        <tr><td>Lija (guía, casquillos, nariz)</td><td>Ajuste en Cura con el anillo de prueba (<i>Hole Horizontal Expansion</i>); nariz floja: una vuelta de cinta</td></tr>
+        <tr><td>Mandril de PVC</td><td>Los casquillos alinean; se revisa rodando el cuerpo en la mesa</td></tr>
+        <tr><td>Foami</td><td>Capas de cinta en el piso de la bahía y en la tapa</td></tr>
+        <tr><td>Listón</td><td>Jaladera de cinta doblada sobre sí misma</td></tr>
+        <tr><td>Alcohol isopropílico</td><td>Agua y jabón, y secar bien</td></tr>
+        <tr><td>Broca de 2 mm</td><td>Alfiler o clip, solo si un puerto quedó tapado</td></tr></tbody></table></div>`;
     } else if(ph.id==="impresion"){
       h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Impresión</h2><p>Ajustes de Cura por pieza y el orden recomendado para todo el lote. Las piezas de presión van <b>una por impresión</b>, de pie como vienen en el STL y sin soporte.</p></div></div>`;
       h+=`<div class="tablebox"><h3>Revisión G: qué cambió</h3><table><thead><tr><th>Pieza</th><th>Problema</th><th>Cambio</th><th>¿Reimprimir?</th></tr></thead><tbody>
@@ -601,12 +596,12 @@ function render(){
       ORDERP.forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" aria-label="Impreso: ${esc(r[2])}" ${lot.done[r[0]]?"checked":""}></td><td class="n">${r[1]}</td><td><b>${r[2]}</b></td><td>${r[3]}</td></tr>`});
       h+=`</tbody></table></div>`;
     } else if(STEPS[ph.id]){
-      const sub={"preparacion":"Ajustar en seco y limpiar. Unos 30 min por cohete; evita la mayoría de las fallas.","dia-1":"Uniones permanentes U5, U3 y U6 con Kola Loka y sellado con cinta aislante. Unos 40 min de trabajo y 24 h de curado.","dia-2":"Sensor y nariz, después del curado. Unos 15 min."}[ph.id];
+      const sub={"preparacion":"Revisar, ajustar en seco y limpiar. Sin lija: los ajustes se hacen en Cura. Unos 20 min por cohete.","dia-1":"Uniones permanentes U5, U3 y U6 con Kola Loka y sellado con cinta aislante. Unos 40 min de trabajo y 24 h de curado.","dia-2":"Sensor y nariz, después del curado. Unos 15 min."}[ph.id];
       h+=`<div class="sechead"><div><h2 id="h-${ph.id}">${ph.name}</h2><p>${sub}</p></div><span class="pill" id="pill-${ph.id}"></span></div>`;
       STEPS[ph.id].forEach((s,i)=>h+=stepCard(s,i));
     } else if(ph.id==="revision"){
       h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Revisión final</h2><p>Un cohete solo sale a la plataforma si pasa todo. Lo más importante es el punto de equilibrio: si queda muy atrás, el cohete se vuelve inestable.</p></div><span class="pill" id="pill-${ph.id}"></span></div>`;
-      h+=`<div class="calc"><div><h3 style="font-size:18px">Calculadora de estabilidad</h3><p style="margin:6px 0 0;color:var(--muted);font-size:13.5px">Pesa el cohete armado con sensor y apóyalo de lado sobre el filo de una regla hasta que se equilibre. Mide desde la punta de la nariz.</p>
+      h+=`<div class="calc"><div><h3 style="font-size:18px">Calculadora de estabilidad</h3><p style="margin:6px 0 0;color:var(--muted);font-size:13.5px">Pesa el cohete armado con sensor en la báscula del laboratorio. Apóyalo de lado sobre la orilla de una mesa o un lápiz hasta que se equilibre y mide con la regla desde la punta de la nariz.</p>
         <label for="inMass">Masa medida (g)</label><input id="inMass" inputmode="decimal" value="${esc(state.mass)}" placeholder="106.5">
         <label for="inX">Punto de equilibrio (mm desde la punta)</label><input id="inX" inputmode="decimal" value="${esc(state.xcm)}" placeholder="243"></div>
         <div><div class="verdict" id="verdict"></div><figure class="fig" style="margin-top:10px">${F.balance()}</figure></div></div>`;
@@ -623,14 +618,14 @@ function render(){
       h+=`<div class="note">Revisa después de cada disparo: U3, U5, la mampara, la pared del tubo y los alerones. Las marcas blanquecinas en el PLA indican que el plástico se estiró.</div><div style="height:12px"></div>`;
       h+=`<div class="tablebox"><h3>Si algo falla</h3><table><thead><tr><th>Dónde</th><th>Causa probable</th><th>Qué cambiar</th></tr></thead><tbody>
         <tr><td>Burbujas en U3 o U5 en la prueba de fugas</td><td>El Kola Loka no llenó toda la junta</td><td>Más gotas en la orilla, espera 1 h y vuelve a encintar</td></tr>
-        <tr><td>U3 o U5 se despega y el PLA sale limpio</td><td>Sin lijar, con grasa o sin curar</td><td>Lija 120, desengrasa y cura 24 h completas</td></tr>
+        <tr><td>U3 o U5 se despega y el PLA sale limpio</td><td>Grasa, humedad o sin curar</td><td>Lava y seca bien, pega de nuevo y cura 24 h completas</td></tr>
         <tr><td>U3 o U5 se despega arrancando plástico</td><td>La unión aguantó más que la pieza</td><td>Revisa la impresión del casquillo</td></tr>
         <tr><td>Capas separadas en el tubo o la mampara</td><td>Mala unión entre capas</td><td>215 °C, filamento seco, 4 perímetros; repite la prueba</td></tr>
-        <tr><td>Se despega un alerón</td><td>Raíz sin lijar o poco pegamento en la canaleta</td><td>Lija la raíz y agrega un cordón de Kola Loka con bicarbonato</td></tr>
+        <tr><td>Se despega un alerón</td><td>Poco pegamento en la canaleta o raíz con grasa</td><td>Limpia la raíz y vuelve a pegar con más líneas de Kola Loka</td></tr>
         <tr><td>La guía se atora después del disparo</td><td>La cola se deformó</td><td>Vuela solo al último escalón que pasó</td></tr></tbody></table></div>`;
     } else if(ph.id==="entre-vuelos"){
       h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Entre vuelos</h2><p>Cómo sacar el sensor para leerlo y qué cambiar si algo se rompe.</p></div></div>`;
-      h+=`<article class="step"><div><h3>Sacar y volver a meter el sensor</h3><div class="txt"><ol><li>Despega las 2 tiras de cinta y jala la nariz: sale con la tapa.</li><li>Jala el listón (o voltea el cohete con la boca hacia tu mano). El sensor sale solo.</li><li>Lee o descarga los datos fuera del cohete.</li><li>Para volver: enciéndelo, mételo de pie sobre el foami, coloca la nariz y pon <b>cinta nueva</b>.</li></ol></div></div><figure class="fig">${F.sensor()}</figure></article>`;
+      h+=`<article class="step"><div><h3>Sacar y volver a meter el sensor</h3><div class="txt"><ol><li>Despega las 2 tiras de cinta y jala la nariz: sale con la tapa.</li><li>Jala la jaladera de cinta (o voltea el cohete con la boca hacia tu mano). El sensor sale solo.</li><li>Lee o descarga los datos fuera del cohete.</li><li>Para volver: enciéndelo, mételo de pie sobre el foami, coloca la nariz y pon <b>cinta nueva</b>.</li></ol></div></div><figure class="fig">${F.sensor()}</figure></article>`;
       h+=`<div class="tablebox"><h3>Reparaciones</h3><table><tbody>
         <tr><td><b>Pieza de presión dañada (3, 4 o 5)</b></td><td>No se repara: usa el cuerpo de repuesto.</td></tr>
         <tr><td><b>Alerón roto</b></td><td>Córtalo al ras, limpia la canaleta con el cutter y pega uno de repuesto (U6).</td></tr>
@@ -647,7 +642,7 @@ function phaseIds(id){
   if(STEPS[id])return STEPS[id].map(s=>s.id);
   if(id==="revision")return REVIEW.map(r=>r[0]);
   if(id==="prueba")return ["s-fugas"].concat(STATIC.flatMap(p=>[1,2,3].map(k=>`s-${p}-${k}`)));
-  if(id==="materiales")return MATS.filter(r=>r[1]==="conseguir").map(r=>r[0]);
+  if(id==="materiales")return MATS.filter(r=>r[1]!=="tienen").map(r=>r[0]);
   if(id==="impresion")return ORDERP.map(r=>r[0]);
   return [];
 }
@@ -719,7 +714,7 @@ function renderVerdict(){
   const m=parseFloat(String(state.mass).replace(",",".")),x=parseFloat(String(state.xcm).replace(",","."));
   const CP=337.4,D=42;let h="";
   if(isNaN(m)&&isNaN(x)){v.innerHTML=`<div class="vrow"><span>Escribe la masa y el punto de equilibrio que mediste.</span></div><div class="vrow"><span>Valores de diseño</span><span class="mono">106.5 g · 243.1 mm · 2.25 cal</span></div>`;return}
-  if(!isNaN(m)){const ok=m>=80;h+=`<div class="vrow"><span>Masa ${m.toFixed(1)} g</span><span class="pill ${ok?(m>=100&&m<=110?"ok":"warn"):"bad"}">${ok?(m>=100&&m<=110?"En rango":"Revisa: diseño 100–110 g"):"Menor a 80 g"}</span></div>`}
+  if(!isNaN(m)){const ok=m>=80;h+=`<div class="vrow"><span>Masa ${m.toFixed(1)} g</span><span class="pill ${ok?(m>=100&&m<=112?"ok":"warn"):"bad"}">${ok?(m>=100&&m<=112?"En rango":"Revisa: diseño 100–112 g"):"Menor a 80 g"}</span></div>`}
   if(!isNaN(x)){const sm=(CP-x)/D;
     h+=`<div class="vrow"><span>Margen estático</span><span class="mono"><b>${sm.toFixed(2)} cal</b> (${(CP-x).toFixed(0)} mm)</span></div>`;
     let cls,txt;
