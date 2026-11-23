@@ -519,30 +519,34 @@ const REVIEW=[
  ["r-id","<b>Identificación:</b> número de cohete y masa escritos con plumón."]
 ];
 const MATS=[
- ["m-ca","Cianoacrilato","Krazy Kola Loka (el que tienen)","Resistol 911","2–3 tubos para el lote",""],
- ["m-cinta","Cinta aislante","La que tienen (vinil, 19 mm)","3M Temflex 1700","1 rollo",""],
- ["m-bic","Bicarbonato de sodio (opcional)","El de la cocina","—","Una pizca por cohete",""],
- ["m-epo","Epóxico (opcional, sella solo U3/U5)","Devcon 2 Ton transparente, 30 min, 25 ml","Loctite Epoxi Bonder 25 g","1 jeringa","https://itwperformancepolymers.com/wp-content/uploads/14260-DEVCON%C2%AE-2-Ton%C2%AE-Epoxy-Mexico-Spanish.pdf"],
- ["m-mask","Masking tape","Scotch 18 mm","Cualquiera de 18–24 mm","1 rollo",""],
- ["m-foami","Foami (goma EVA)","Liso de 2 mm, tamaño carta","Cualquier foami liso de 2 mm","1 hoja",""],
- ["m-ipa","Alcohol isopropílico","Silimex 1 L","Steren LIM-ALH-L 1 L","1 L","https://www.cyberpuerta.mx/Computadoras/Accesorios-para-PC-s/Limpiadores-para-Electronicos/Silimex-Alcohol-Isopropilico-para-Limpieza-de-PC-s-y-Electronica-1-Litro-3.html"],
- ["m-l120","Lija de agua 120","Truper LIAG-120","Grano 100–150","2 hojas","https://truper.com/ficha_merca/ficha-print.php?code=11620"],
- ["m-l220","Lija de agua 220","Truper LIAG-220","Grano 180–240","2 hojas","https://truper.com/ficha_merca/ficha-print.php?code=11623"],
- ["m-pvc","Mandril","Tubo PVC hidráulico céd. 40 de 1/2\" (Ø ext. ≈ 21.3)","Un tramo del tubo lanzador","50 cm + bolsa o cinta canela","https://www.truper.com/ficha_tecnica_pdf/views/ficha-print.php?id=7440"],
- ["m-liston","Listón delgado","Listón de 3–6 mm","Cinta de tela","20 cm por cohete",""],
- ["m-broca","Broca","2 mm","5/64\"","1",""],
- ["m-bascula","Báscula","Digital de 0.1 g","La del laboratorio","1",""],
- ["m-epp","Protección","Guantes de nitrilo y lentes de policarbonato","Guantes de látex, careta","1 caja / 1 por persona",""],
- ["m-varios","Varios","Abatelenguas, cutter, plumón, vernier","Tarjeta de plástico para mezclar","—",""]
+ // [id, estado, material, qué usar, si no hay, cantidad para el lote, para qué]
+ ["m-ca","tienen","Cianoacrilato","Krazy Kola Loka","Resistol 911","2–3 tubos","U2, U3, U5, U6 y foami"],
+ ["m-cinta","tienen","Cinta aislante","La de vinil que tienen (19 mm)","3M Temflex 1700","1 rollo","Sellar U3 y U5; fijar la nariz (U1)"],
+ ["m-pla","tienen","Filamento PLA","Ender PLA 1.75 mm","Cualquier PLA 1.75","≈ 550 g del 1.8 kg que tienen","Todas las piezas"],
+ ["m-l120","conseguir","Lija de agua grano 120","Truper LIAG-120","Grano 100–150","1–2 hojas","Zonas de pegado y raíz de alerones"],
+ ["m-l220","conseguir","Lija de agua grano 220","Truper LIAG-220","Grano 180–240","1–2 hojas","Guía Ø22.2, hombro de la nariz, borde de ataque"],
+ ["m-pvc","conseguir","Mandril","Tubo PVC hidráulico céd. 40 de 1/2\" (Ø ≈ 21.3), 50 cm","Un tramo del tubo lanzador","1 tramo","Lijar la guía y pegar el cuerpo recto"],
+ ["m-bolsa","conseguir","Bolsa de plástico","Bolsa delgada de supermercado","Cinta canela","1","Forrar el mandril (el Kola Loka no pega en ella)"],
+ ["m-foami","conseguir","Foami liso de 2 mm","Hoja tamaño carta","Cualquier foami liso de 2 mm","1 hoja","Discos Ø38 y Ø30 del sensor"],
+ ["m-guantes","conseguir","Guantes de nitrilo","Caja chica","Guantes de látex","1 par por persona","El cianoacrilato pega la piel"],
+ ["m-cutter","conseguir","Cutter","Cutter con navaja nueva","Navaja de modelismo","1","Brim, rebabas y canaletas"],
+ ["m-liston","conseguir","Listón delgado","Listón de 3–6 mm","Cinta de tela o hilo grueso","20 cm por cohete","Sacar el sensor"],
+ ["m-broca","conseguir","Broca de 2 mm","Girada a mano","Broca de 5/64\" o un clip enderezado","1","Limpiar los puertos estáticos"],
+ ["m-bascula","conseguir","Báscula","Digital de 0.1 g","La del laboratorio o una de cocina de 1 g","1","Revisión final (≥ 80 g)"],
+ ["m-lentes","conseguir","Lentes de seguridad","De policarbonato","Careta","1 por persona","Prueba estática y lanzamientos"],
+ ["m-limpia","opcional","Limpiador","Alcohol isopropílico","Agua y jabón, y secar bien","Poco","Desengrasar antes de pegar"],
+ ["m-bic","opcional","Bicarbonato de sodio","El de la cocina","—","Una pizca por cohete","Cordón duro en la raíz de los alerones"],
+ ["m-jabon","opcional","Agua con jabón","Atomizador o brocha","—","Poco","Buscar fugas a 20–30 PSI"],
+ ["m-plumon","opcional","Plumón permanente y vernier","—","Regla","1","Marcar el cohete y medir"]
 ];
 const PRINT=[
- ["105A","Anillo de prueba","100 %","1.2","0.2","Brim 5","50 %","1","~25 min","Base sobre la cama"],
- ["105","Cola","100 %","1.2","0.2","Brim 5","50 %","1","~2 h","Base sobre la cama"],
- ["104","Tubo de presión","100 %","1.2","0.2","Brim 5","50 %","1","~2 h 40 min","Extremo delgado (Ø25.4) sobre la cama, casquillo arriba"],
- ["103","Segmento superior","100 %","1.2","0.2","Brim 5","50 %","1","5 h 10 min","Tubo delgado sobre la cama, bahía arriba"],
- ["106","Alerones (placa ×4)","100 %","0.8","0.2","Sin brim","100 %","4","~2 h","Planos"],
- ["102","Tapas","100 %","0.8","0.2","Sin brim","100 %","4","~1 h 15 min","Placa sobre la cama"],
- ["101","Narices","0 %","0.8","0.16","Brim 5","100 %","2","~5 h 30 min","Hombro sobre la cama, punta arriba"]
+ ["105A","Anillo de prueba","100 %","1.2","0.2","Brim 5","50 %","1","~25 min","1.7 g","Base sobre la cama"],
+ ["105","Cola","100 %","1.2","0.2","Brim 5","50 %","1","~2 h","13.1 g","Base sobre la cama"],
+ ["104","Tubo de presión","100 %","1.2","0.2","Brim 5","50 %","1","~2 h 40 min","15.0 g","Extremo delgado (Ø25.4) sobre la cama, casquillo arriba"],
+ ["103","Segmento superior","100 %","1.2","0.2","Brim 5","50 %","1","5 h 10 min","34.5 g","Tubo delgado sobre la cama, bahía arriba"],
+ ["106","Alerones (placa ×4)","100 %","0.8","0.2","Sin brim","100 %","4","~2 h","2.7 g c/u","Planos"],
+ ["102","Tapas","100 %","0.8","0.2","Sin brim","100 %","4","~1 h 15 min","1.5 g","Placa sobre la cama"],
+ ["101","Narices","0 %","0.8","0.16","Brim 5","100 %","2","~5 h 30 min","11.6 g","Hombro sobre la cama, punta arriba"]
 ];
 const ORDERP=[
  ["o1","Fase 1","Anillo de prueba 105A","Pruébalo en el tubo lanzador antes de seguir"],
@@ -571,14 +575,25 @@ function render(){
   PH.forEach(ph=>{
     h+=`<section id="sec-${ph.id}" aria-labelledby="h-${ph.id}">`;
     if(ph.id==="materiales"){
-      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Materiales</h2><p>Lo que hay que comprar para el lote completo: 3 cohetes de vuelo, 1 cuerpo para la prueba estática y repuestos. Esta lista es la misma para todos los cohetes.</p></div></div>`;
-      h+=`<div class="tablebox"><table><thead><tr><th></th><th>Material</th><th>Recomendado</th><th>Si no hay</th><th>Cantidad</th></tr></thead><tbody>`;
-      MATS.forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" id="${r[0]}" ${lot.done[r[0]]?"checked":""}><label class="mono" for="${r[0]}" style="position:absolute;left:-9999px">Comprado</label></td><td><b>${r[1]}</b></td><td>${r[5]?`<a href="${r[5]}" target="_blank" rel="noopener">${esc(r[2])}</a>`:esc(r[2])}</td><td>${esc(r[3])}</td><td class="n">${esc(r[4])}</td></tr>`});
-      h+=`</tbody></table></div>`;
+      const ST={tienen:["ok","Ya lo tienen"],conseguir:["warn","Conseguir"],opcional:["","Opcional"]};
+      const cnt=k=>MATS.filter(r=>r[1]===k).length;
+      h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Materiales</h2><p>Lista para el lote completo (3 cohetes de vuelo, 1 cuerpo de prueba estática y repuestos), con lo que ya tienen. Ya no hace falta epóxico: se pega con Kola Loka y se sella con cinta aislante.</p></div><span class="pill warn">${cnt("conseguir")} por conseguir</span></div>`;
+      ["tienen","conseguir","opcional"].forEach(k=>{
+        h+=`<div class="tablebox"><h3>${{tienen:"Ya lo tienen",conseguir:"Por conseguir",opcional:"Opcional"}[k]} <span class="pill ${ST[k][0]}">${cnt(k)}</span></h3><table><thead><tr><th></th><th>Material</th><th>Qué usar</th><th>Si no hay</th><th>Cantidad</th><th>Para qué</th></tr></thead><tbody>`;
+        MATS.filter(r=>r[1]===k).forEach(r=>{h+=`<tr class="chk"><td><input type="checkbox" class="mini" data-lot="${r[0]}" aria-label="Listo: ${esc(r[2])}" ${lot.done[r[0]]||k==="tienen"?"checked":""}></td><td><b>${esc(r[2])}</b></td><td>${esc(r[3])}</td><td>${esc(r[4])}</td><td class="n">${esc(r[5])}</td><td>${esc(r[6])}</td></tr>`});
+        h+=`</tbody></table></div>`;});
+      h+=`<div class="note">Ya no se usan: epóxico, masking tape ni abatelenguas. El Kola Loka seca en segundos, así que no hace falta sujetar los alerones mientras cura.</div>`;
     } else if(ph.id==="impresion"){
       h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Impresión</h2><p>Ajustes de Cura por pieza y el orden recomendado para todo el lote. Las piezas de presión van <b>una por impresión</b>, de pie como vienen en el STL y sin soporte.</p></div></div>`;
-      h+=`<div class="tablebox"><h3>Ajustes por pieza (Ender-3, PLA, boquilla 0.4)</h3><table><thead><tr><th>Plano</th><th>Pieza</th><th>Infill</th><th>Paredes mm</th><th>Capa mm</th><th>Adhesión</th><th>Ventilador</th><th>Por cama</th><th>Tiempo</th><th>Orientación</th></tr></thead><tbody>`;
-      PRINT.forEach(r=>{h+=`<tr><td class="n">${r[0]}</td><td><b>${r[1]}</b></td><td class="n">${r[2]}</td><td class="n">${r[3]}</td><td class="n">${r[4]}</td><td>${r[5]}</td><td class="n">${r[6]}</td><td class="n">${r[7]}</td><td class="n">${r[8]}</td><td>${r[9]}</td></tr>`});
+      h+=`<div class="tablebox"><h3>Revisión G: qué cambió</h3><table><thead><tr><th>Pieza</th><th>Problema</th><th>Cambio</th><th>¿Reimprimir?</th></tr></thead><tbody>
+        <tr><td><b>101 Nariz</b></td><td>La ojiva y el hombro solo se tocaban en una arista; se desprendía</td><td>Anillo sólido de 6 mm que los une · 10.5 → 11.6 g</td><td><span class="pill bad">Sí</span></td></tr>
+        <tr><td><b>105 Cola</b></td><td>Rieles de 1.0 mm se rompían</td><td>Rieles de 1.6 mm, 3 mm de alto, con pie de 2.4 × 0.8 · 12.5 → 13.1 g</td><td><span class="pill bad">Sí</span></td></tr>
+        <tr><td><b>105A Anillo de prueba</b></td><td>—</td><td>Igual a la base de la nueva cola</td><td><span class="pill bad">Sí</span></td></tr>
+        <tr><td><b>104 Tubo de presión</b></td><td>Con el casquillo abajo solo apoyaba 0.6 mm y se despegaba</td><td>Mismo diseño, se imprime con el extremo delgado abajo</td><td><span class="pill warn">Usa el STL nuevo</span></td></tr>
+        <tr><td><b>106 Alerones · 102 Tapa · 103 Segmento</b></td><td>—</td><td>Sin cambios (la canaleta sigue en 1.4 mm)</td><td><span class="pill ok">No</span></td></tr>
+        <tr><td><b>Cohete armado</b></td><td>—</td><td>104.7 → 106.5 g · CM 243.1 mm · margen 2.25 cal (igual)</td><td></td></tr></tbody></table></div>`;
+      h+=`<div class="tablebox"><h3>Ajustes por pieza (Ender-3, PLA, boquilla 0.4)</h3><table><thead><tr><th>Plano</th><th>Pieza</th><th>Infill</th><th>Paredes mm</th><th>Capa mm</th><th>Adhesión</th><th>Ventilador</th><th>Por cama</th><th>Tiempo</th><th>Masa</th><th>Orientación</th></tr></thead><tbody>`;
+      PRINT.forEach(r=>{h+=`<tr><td class="n">${r[0]}</td><td><b>${r[1]}</b></td><td class="n">${r[2]}</td><td class="n">${r[3]}</td><td class="n">${r[4]}</td><td>${r[5]}</td><td class="n">${r[6]}</td><td class="n">${r[7]}</td><td class="n">${r[8]}</td><td class="n">${r[9]}</td><td>${r[10]}</td></tr>`});
       h+=`</tbody></table></div>`;
       h+=`<div class="note">En todas: 210 °C, 40 mm/s, arriba/abajo 0.8 mm, soporte apagado, ventilador apagado en la primera capa, tiempo mínimo por capa 10 s. Si la masa que da Cura es mucho mayor que la del plano, casi siempre se coló soporte.</div>`;
       h+=`<div class="note bad">Tubo de presión: usa el STL corregido (extremo delgado abajo). Con el casquillo abajo solo apoya un anillo de 0.6 mm y se despega.</div><div style="height:12px"></div>`;
@@ -632,7 +647,7 @@ function phaseIds(id){
   if(STEPS[id])return STEPS[id].map(s=>s.id);
   if(id==="revision")return REVIEW.map(r=>r[0]);
   if(id==="prueba")return ["s-fugas"].concat(STATIC.flatMap(p=>[1,2,3].map(k=>`s-${p}-${k}`)));
-  if(id==="materiales")return MATS.map(r=>r[0]);
+  if(id==="materiales")return MATS.filter(r=>r[1]==="conseguir").map(r=>r[0]);
   if(id==="impresion")return ORDERP.map(r=>r[0]);
   return [];
 }
