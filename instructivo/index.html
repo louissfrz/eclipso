@@ -535,16 +535,16 @@ const PRINT=[
  ["103","Segmento superior","100 %","1.2","0.2","Brim 5","50 %","1","5 h 10 min","34.5 g","Tubo delgado sobre la cama, bahía arriba"],
  ["106","Alerones (placa ×4)","100 %","0.8","0.2","Sin brim","100 %","4","~2 h","2.7 g c/u","Planos"],
  ["102","Tapas","100 %","0.8","0.2","Sin brim","100 %","4","~1 h 15 min","1.5 g","Placa sobre la cama"],
- ["101","Narices","0 %","0.8","0.16","Brim 5","100 %","2","~5 h 30 min","11.6 g","Hombro sobre la cama, punta arriba"]
+ ["101","Nariz","0 %","0.8","0.16","Brim 8","100 %","1","~2 h 45 min","11.6 g","Hombro sobre la cama, punta arriba (una por impresión)"]
 ];
 const ORDERP=[
  ["o1","Fase 1","Anillo de prueba 105A","Pruébalo en el tubo lanzador antes de seguir"],
  ["o2","Fase 1","Cola 105",""],["o3","Fase 1","Tubo de presión 104",""],["o4","Fase 1","Segmento superior 103","De noche"],
  ["o5","Fase 1","Placa de 4 alerones","Con esto armas el cuerpo de prueba estática"],
- ["o6","Fase 1","4 tapas 102","Mientras cura el cuerpo de prueba"],["o7","Fase 1","2 narices 101","De noche"],
+ ["o6","Fase 1","4 tapas 102","Mientras cura el cuerpo de prueba"],["o7","Fase 1","Nariz 101","Una por impresión, brim 8 mm"],
  ["o8","Fase 2","4 segmentos superiores 103","Solo si pasó la prueba estática. Uno por noche"],
  ["o9","Fase 2","4 tubos de presión 104","Uno por impresión"],["o10","Fase 2","4 colas 105","Uno por impresión"],
- ["o11","Fase 2","3 placas de alerones",""],["o12","Fase 2","2 narices 101",""]
+ ["o11","Fase 2","3 placas de alerones",""],["o12","Fase 2","3 narices 101","Una por impresión"]
 ];
 const STATIC=[60,80,100,110];
 
@@ -581,7 +581,7 @@ function render(){
     } else if(ph.id==="impresion"){
       h+=`<div class="sechead"><div><h2 id="h-${ph.id}">Impresión</h2><p>Ajustes de Cura por pieza y el orden recomendado para todo el lote. Las piezas de presión van <b>una por impresión</b>, de pie como vienen en el STL y sin soporte.</p></div></div>`;
       h+=`<div class="tablebox"><h3>Revisión G: qué cambió</h3><table><thead><tr><th>Pieza</th><th>Problema</th><th>Cambio</th><th>¿Reimprimir?</th></tr></thead><tbody>
-        <tr><td><b>101 Nariz</b></td><td>La ojiva y el hombro solo se tocaban en una arista; se desprendía</td><td>Anillo sólido de 6 mm que los une · 10.5 → 11.6 g</td><td><span class="pill bad">Sí</span></td></tr>
+        <tr><td><b>101 Nariz</b></td><td>La ojiva y el hombro solo se tocaban en una arista; se desprendía</td><td>Anillo sólido de 6 mm que los une, y base completa de 0.8 mm sin chaflán (antes solo apoyaba 0.3 mm y se despegaba) · 10.5 → 11.6 g</td><td><span class="pill bad">Sí</span></td></tr>
         <tr><td><b>105 Cola</b></td><td>Rieles de 1.0 mm se rompían</td><td>Rieles de 1.6 mm, 3 mm de alto, con pie de 2.4 × 0.8 · 12.5 → 13.1 g</td><td><span class="pill bad">Sí</span></td></tr>
         <tr><td><b>105A Anillo de prueba</b></td><td>—</td><td>Igual a la base de la nueva cola</td><td><span class="pill bad">Sí</span></td></tr>
         <tr><td><b>104 Tubo de presión</b></td><td>Con el casquillo abajo solo apoyaba 0.6 mm y se despegaba</td><td>Mismo diseño, se imprime con el extremo delgado abajo</td><td><span class="pill warn">Usa el STL nuevo</span></td></tr>
